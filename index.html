@@ -972,16 +972,23 @@ async function verwijderRecord(id) {
 // MODALS
 // ═══════════════════════════════════════════════
 function openSlaOpModal() {
-  const d=getEI();
-  $('sop-datum').value=today();
-  $('sop-naam').value='';
-  $('sop-notities').value='';
-  $('sop-preview').innerHTML=`
-    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Deelnemers</div><strong>${d.deel}</strong></div>
-    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Omzet</div><strong style="color:var(--accent)">${fmt(d.omzet)}</strong></div>
-    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Kosten</div><strong style="color:var(--accent3)">${fmt(d.totK)}</strong></div>
-    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Netto</div><strong style="color:${kleur(d.netto)}">${fmt(d.netto)}</strong></div>`;
-  $('modal-slaop').classList.add('open');
+  const d = getEI();
+  editingId = null;
+  $('modal-nieuw-titel').textContent = '💾 Event registreren';
+  $('n-datum').value = today();
+  $('n-naam').value = '';
+  $('n-notities').value = '';
+  $('n-cash').value = d.omzet;
+  $('n-hipsy').value = 0;
+  $('n-deel').value = d.deel;
+  $('n-soc').value = d.socN;
+  $('n-vrijw').value = d.vrijw;
+  modalEventKosten = kostenRegels.map(r => ({naam: r.naam, bedrag: r.bedrag}));
+  modalOverigeKosten = [];
+  renderModalKostenLijst('n-kosten-regels', modalEventKosten, 'event');
+  renderModalKostenLijst('n-overige-regels', modalOverigeKosten, 'overig');
+  calcModal();
+  $('modal-nieuw').classList.add('open');
 }
 
 let modalEventKosten = [];
