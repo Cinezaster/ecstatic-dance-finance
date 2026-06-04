@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ecstatic Dance · Financiële Simulator</title>
+<style>
+:root{
+  --bg:#0f0e17;--surface:#1a1828;--surface2:#221f35;--border:#2e2a48;
+  --accent:#b48ef7;--accent2:#7ecfb3;--accent3:#f7c59f;--red:#f77c7c;
+  --text:#e8e3f5;--muted:#8b87aa;--radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+
+header{text-align:center;padding:36px 20px 24px;background:linear-gradient(160deg,#1a0d38 0%,#0f0e17 60%);border-bottom:1px solid var(--border);}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;}
+header h1 span{color:var(--accent);}
+header p{color:var(--muted);margin-top:6px;font-size:.9rem;}
+
+.tabs{display:flex;justify-content:center;gap:8px;padding:16px 20px;position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.tab-btn{padding:8px 20px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.88rem;font-weight:500;transition:all .2s;}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#1a0d38;font-weight:700;}
+
+.page{display:none;max-width:980px;margin:0 auto;padding:26px 18px 60px;}
+.page.active{display:block;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.card-title{font-size:.72rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+@media(max-width:680px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+
+label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500;}
+input[type=number],input[type=text],input[type=date],textarea,select{
+  width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;
+  padding:8px 11px;color:var(--text);font-size:.92rem;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;appearance:none;font-family:inherit;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);}
+select option{background:var(--surface2);}
+textarea{resize:vertical;min-height:70px;}
+input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin-top:4px;}
+.range-row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:2px;}
+
+.toggle-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.toggle-btn{padding:8px 16px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:500;transition:all .2s;}
+.toggle-btn.active{background:var(--surface2);border-color:var(--accent);color:var(--accent);}
+
+.cost-lines{display:flex;flex-direction:column;gap:9px;}
+.cost-line{display:grid;grid-template-columns:1fr 120px 32px;gap:8px;align-items:center;}
+.cost-line input[type=text]{font-size:.86rem;}
+.cost-line input[type=number]{text-align:right;}
+.remove-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.remove-btn:hover{border-color:var(--red);color:var(--red);}
+.add-btn{margin-top:10px;padding:7px 16px;border-radius:8px;border:1.5px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.85rem;transition:all .2s;}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Primary action buttons */
+.btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;transition:all .2s;font-family:inherit;}
+.btn-primary{background:var(--accent);color:#1a0d38;}
+.btn-primary:hover{opacity:.88;}
+.btn-secondary{background:var(--surface2);border:1.5px solid var(--border);color:var(--muted);}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger{background:transparent;border:1.5px solid var(--border);color:var(--muted);}
+.btn-danger:hover{border-color:var(--red);color:var(--red);}
+.btn-sm{padding:6px 13px;font-size:.8rem;}
+
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;}
+.result-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.result-box .lbl{font-size:.72rem;color:var(--muted);margin-bottom:3px;}
+.result-box .val{font-size:1.6rem;font-weight:700;letter-spacing:-.5px;}
+.result-box .sub{font-size:.76rem;color:var(--muted);margin-top:2px;}
+.green{color:var(--accent2);} .red{color:var(--red);} .purple{color:var(--accent);} .orange{color:var(--accent3);}
+
+.profit-bar-wrap{margin-top:16px;background:var(--surface2);border-radius:999px;height:9px;overflow:hidden;}
+.profit-bar{height:100%;border-radius:999px;transition:width .4s ease;}
+.insight{margin-top:12px;padding:11px 15px;border-radius:10px;font-size:.86rem;line-height:1.5;}
+.insight.good{background:#1a3528;border:1px solid #2e5944;color:var(--accent2);}
+.insight.bad{background:#3a1a1a;border:1px solid #5a2a2a;color:var(--red);}
+.insight.warn{background:#2e2410;border:1px solid #5a4820;color:var(--accent3);}
+.insight.info{background:#1a1e38;border:1px solid #2a3060;color:var(--accent);}
+
+hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
+
+.chart-wrap{width:100%;margin-top:10px;overflow:visible;}
+.chart-wrap svg{width:100%;display:block;}
+
+.proj-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:11px;margin-bottom:18px;}
+.proj-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;text-align:center;}
+.proj-box .p-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.proj-box .p-val{font-size:1.35rem;font-weight:700;}
+
+.section-heading{font-size:1rem;font-weight:600;margin-bottom:12px;color:var(--text);}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:.83rem;}
+th{text-align:left;padding:7px 10px;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+td.r{text-align:right;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.7rem;font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--muted);margin-left:6px;vertical-align:middle;}
+
+/* Records */
+.record-actions{display:flex;gap:8px;justify-content:flex-end;margin-bottom:16px;flex-wrap:wrap;}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
+.empty-state .icon{font-size:3rem;margin-bottom:12px;}
+
+/* Status badge */
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.4px;}
+.badge-green{background:#1a3528;color:var(--accent2);border:1px solid #2e5944;}
+.badge-red{background:#3a1a1a;color:var(--red);border:1px solid #5a2a2a;}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;}
+.modal h2{font-size:1.1rem;margin-bottom:20px;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+/* Settings */
+.settings-step{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px;}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#1a0d38;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.step-body{flex:1;}
+.step-body h3{font-size:.95rem;font-weight:600;margin-bottom:4px;}
+.step-body p{font-size:.83rem;color:var(--muted);line-height:1.55;}
+.code-block{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Courier New',monospace;font-size:.8rem;color:var(--accent);margin-top:8px;word-break:break-all;line-height:1.6;}
+.connection-status{display:flex;align-items:center;gap:8px;font-size:.83rem;}
+.dot{width:8px;height:8px;border-radius:50%;}
+.dot-ok{background:var(--accent2);}
+.dot-err{background:var(--red);}
+.dot-idle{background:var(--muted);}
+
+/* Toast */
+#toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:10px;font-size:.88rem;font-weight:600;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+#toast.show{opacity:1;transform:translateY(0);}
+#toast.ok{background:#1a3528;border:1px solid #2e5944;color:var(--accent2);}
+#toast.err{background:#3a1a1a;border:1px solid #5a2a2a;color:var(--red);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌀 <span>Ecstatic Dance</span> · Financiële Simulator</h1>
+  <p>Kosten per event · Break-even · Jaarprojectie · Registraties</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active"  id="tb-event"      onclick="showTab('event',this)">🎵 Per Event</button>
+  <button class="tab-btn"         id="tb-projectie"  onclick="showTab('projectie',this)">📈 Projectie</button>
+  <button class="tab-btn"         id="tb-records"    onclick="showTab('records',this)">📋 Registraties</button>
+  <button class="tab-btn"         id="tb-instellingen" onclick="showTab('instellingen',this)">⚙️ Instellingen</button>
+</div>
+
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════
+     TAB 1: PER EVENT
+═══════════════════════════════ -->
+<div class="page active" id="tab-event">
+
+  <div class="card">
+    <div class="card-title">Deelnemers</div>
+    <div class="grid-2">
+      <div>
+        <label>Betalende deelnemers</label>
+        <input type="range" id="deelnemers" min="10" max="120" value="70" oninput="syncR(this,'dNum');calc()">
+        <div class="range-row"><span>10</span><span id="dNum" style="color:var(--accent);font-weight:700">70</span><span>120</span></div>
+      </div>
+      <div>
+        <label>Vrijwilligers (gratis toegang)</label>
+        <input type="range" id="vrijwilligers" min="0" max="12" value="6" oninput="syncR(this,'vNum');calc()">
+        <div class="range-row"><span>0</span><span id="vNum" style="color:var(--accent);font-weight:700">6</span><span>12</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Prijzen</div>
+    <div class="grid-3">
+      <div>
+        <label>Standaard ticket (€)</label>
+        <input type="number" id="stdPrijs" value="20" oninput="calc()" min="0" step="1">
+      </div>
+      <div>
+        <label>Sociaal tarief (€)</label>
+        <input type="number" id="socPrijs" value="7" oninput="calc()" min="0" step="1">
+      </div>
+      <div>
+        <label>% met sociaal tarief</label>
+        <input type="range" id="socPct" min="0" max="60" value="15" oninput="syncR(this,'spNum','%');calc()">
+        <div class="range-row"><span>0%</span><span id="spNum" style="color:var(--accent);font-weight:700">15%</span><span>60%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Vaste Kosten per Event</div>
+    <div class="cost-lines" id="kostenRegels"></div>
+    <button class="add-btn" onclick="voegKostenToe()">+ Kostenregel toevoegen</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Materiaalfonds &amp; Vrijwilligerswaardering</div>
+    <div class="grid-2">
+      <div>
+        <label>Materiaalfonds (% van omzet)</label>
+        <input type="range" id="materiaalPct" min="0" max="30" value="5" oninput="syncR(this,'matNum','%');calc()">
+        <div class="range-row"><span>0%</span><span id="matNum" style="color:var(--accent);font-weight:700">5%</span><span>30%</span></div>
+      </div>
+      <div>
+        <label>Vrijwilligerswaardering (€ per event)</label>
+        <input type="number" id="vrijwWaard" value="25" oninput="calc()" min="0" step="5">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:var(--accent);background:linear-gradient(135deg,#1a1828 0%,#1c1530 100%);">
+    <div class="card-title">Resultaat</div>
+    <div class="results-grid">
+      <div class="result-box">
+        <div class="lbl">Bruto Omzet</div>
+        <div class="val purple" id="res-omzet">€0</div>
+        <div class="sub" id="res-omzet-sub">—</div>
+      </div>
+      <div class="result-box">
+        <div class="lbl">Totale Kosten</div>
+        <div class="val orange" id="res-kosten">€0</div>
+        <div class="sub" id="res-kosten-sub">incl. materiaalfonds</div>
+      </div>
+      <div class="result-box">
+        <div class="lbl">Netto Resultaat</div>
+        <div class="val" id="res-netto">€0</div>
+        <div class="sub" id="res-netto-sub">—</div>
+      </div>
+      <div class="result-box">
+        <div class="lbl">Break-even</div>
+        <div class="val purple" id="res-be">0</div>
+        <div class="sub" id="res-be-sub">deelnemers nodig</div>
+      </div>
+    </div>
+    <div class="profit-bar-wrap">
+      <div class="profit-bar" id="profit-bar" style="width:0%;background:var(--accent2)"></div>
+    </div>
+    <div class="insight" id="insight-box">—</div>
+    <div style="margin-top:16px;display:flex;justify-content:flex-end;">
+      <button class="btn btn-primary" onclick="openSlaOpModal()">💾 Event registreren</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-heading">Omzet vs. Kosten — overzicht</div>
+    <div class="chart-wrap" id="event-chart-wrap" style="min-height:200px;"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     TAB 2: PROJECTIE
+═══════════════════════════════ -->
+<div class="page" id="tab-projectie">
+
+  <div class="card">
+    <div class="card-title">Projectie-instellingen</div>
+    <div class="grid-3">
+      <div>
+        <label>Frequentie</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="freq-twee" onclick="setFreq('tweewekelijks',this)">Tweewekelijks</button>
+          <button class="toggle-btn" id="freq-week" onclick="setFreq('wekelijks',this)">Wekelijks</button>
+        </div>
+      </div>
+      <div>
+        <label>Gem. deelnemers per event</label>
+        <input type="number" id="proj-deel" value="70" oninput="calcProj()" min="10" step="5">
+      </div>
+      <div>
+        <label>Groei deelnemers per maand (%)</label>
+        <input type="range" id="proj-groei" min="0" max="10" value="2" step="0.5" oninput="syncR(this,'pgNum','%');calcProj()">
+        <div class="range-row"><span>0%</span><span id="pgNum" style="color:var(--accent);font-weight:700">2%</span><span>10%</span></div>
+      </div>
+    </div>
+    <hr>
+    <div class="grid-3">
+      <div>
+        <label>Startmaand projectie</label>
+        <select id="proj-startmaand" onchange="calcProj()">
+          <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maart</option>
+          <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+          <option value="6">Juli</option><option value="7">Augustus</option><option value="8">September</option>
+          <option value="9">Oktober</option><option value="10">November</option><option value="11">December</option>
+        </select>
+      </div>
+      <div>
+        <label>Eenmalige investering apparatuur (€)</label>
+        <input type="number" id="proj-invest" value="4000" oninput="calcProj()" min="0" step="500">
+      </div>
+      <div>
+        <label>Investering in maand #</label>
+        <input type="number" id="proj-invest-mo" value="1" oninput="calcProj()" min="1" max="12">
+      </div>
+    </div>
+    <hr>
+    <div class="grid-2">
+      <div>
+        <label>Startkapitaal (€)</label>
+        <input type="number" id="proj-kas" value="0" oninput="calcProj()" min="0" step="500">
+      </div>
+    </div>
+    <hr>
+    <p style="font-size:.78rem;color:var(--muted)">ℹ️ Prijzen, kosten en fondspercentage worden overgenomen uit het tabblad "Per Event".</p>
+  </div>
+
+  <div class="proj-summary" id="proj-samenvatting"></div>
+
+  <div class="card">
+    <div class="section-heading">Maandelijkse omzet vs. kosten · Cumulatief kassaldo</div>
+    <div class="chart-wrap" id="proj-chart-wrap" style="min-height:300px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-heading">Maandelijks overzicht</div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>Maand</th><th style="text-align:right">Events</th><th style="text-align:right">Gem. deel.</th>
+          <th style="text-align:right">Omzet</th><th style="text-align:right">Vaste kosten</th>
+          <th style="text-align:right">Fonds/invest.</th><th style="text-align:right">Netto</th><th style="text-align:right">Cumulatief</th>
+        </tr></thead>
+        <tbody id="proj-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-heading">Opbouw materiaalfonds</div>
+    <div class="chart-wrap" id="materiaal-chart-wrap" style="min-height:200px;"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     TAB 3: REGISTRATIES
+═══════════════════════════════ -->
+<div class="page" id="tab-records">
+
+  <div class="record-actions">
+    <button class="btn btn-secondary btn-sm" onclick="laadRecords()">↻ Vernieuwen</button>
+    <button class="btn btn-primary btn-sm" onclick="openNieuwModal()">+ Nieuw event</button>
+  </div>
+
+  <!-- Summary KPIs -->
+  <div class="proj-summary" id="rec-samenvatting" style="display:none"></div>
+
+  <!-- Revenue chart -->
+  <div class="card" id="rec-grafiek-card" style="display:none">
+    <div class="section-heading">Omzet per event</div>
+    <div class="chart-wrap" id="rec-chart-wrap" style="min-height:220px;"></div>
+  </div>
+
+  <!-- Table -->
+  <div class="card" id="rec-tabel-card">
+    <div class="section-heading">Alle evenementen</div>
+    <div id="rec-table-wrap"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     TAB 4: INSTELLINGEN
+═══════════════════════════════ -->
+<div class="page" id="tab-instellingen">
+
+  <div class="card">
+    <div class="card-title">Supabase verbinding</div>
+
+    <div class="settings-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Maak een gratis Supabase-project aan</h3>
+        <p>Ga naar <strong>supabase.com</strong> → "Start your project" → maak een gratis account → maak een nieuw project.</p>
+      </div>
+    </div>
+
+    <div class="settings-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Maak de database-tabel aan</h3>
+        <p>Ga in je project naar <strong>SQL Editor</strong> en voer dit uit:</p>
+        <div class="code-block">create table dans_events (
+  id bigint primary key generated always as identity,
+  datum date not null,
+  naam text,
+  deelnemers_betaald integer,
+  deelnemers_sociaal integer,
+  vrijwilligers integer,
+  omzet_bruto numeric,
+  kosten_vast numeric,
+  kosten_fonds numeric,
+  kosten_vrijw numeric,
+  netto numeric,
+  notities text,
+  created_at timestamptz default now()
+);
+alter table dans_events enable row level security;
+create policy "team_access" on dans_events
+  for all using (true) with check (true);</div>
+      </div>
+    </div>
+
+    <div class="settings-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Haal je URL en sleutel op</h3>
+        <p>Ga naar <strong>Project Settings → API</strong>. Je hebt de <em>Project URL</em> en de <em>anon public key</em> nodig.</p>
+      </div>
+    </div>
+
+    <div class="settings-step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Vul hieronder in</h3>
+        <div class="grid-2" style="margin-top:10px">
+          <div>
+            <label>Supabase Project URL</label>
+            <input type="text" id="sb-url" placeholder="https://xxxx.supabase.co" oninput="slaInstellingenOp()">
+          </div>
+          <div>
+            <label>Anon Public Key</label>
+            <input type="text" id="sb-key" placeholder="eyJhbGci..." oninput="slaInstellingenOp()">
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" onclick="testVerbinding()">Verbinding testen</button>
+          <div class="connection-status" id="conn-status">
+            <div class="dot dot-idle"></div><span style="color:var(--muted)">Nog niet getest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="card-title" style="margin-bottom:12px">Publiceren via GitHub Pages</div>
+
+    <div class="settings-step">
+      <div class="step-num">A</div>
+      <div class="step-body">
+        <h3>Maak een repository aan op GitHub</h3>
+        <p>Ga naar <strong>github.com</strong> → "New repository" → geef het een naam (bv. <em>ecstatic-dance-finance</em>) → maak het <strong>Public</strong> → klik "Create repository".</p>
+      </div>
+    </div>
+
+    <div class="settings-step">
+      <div class="step-num">B</div>
+      <div class="step-body">
+        <h3>Upload dit HTML-bestand</h3>
+        <p>Klik in je nieuwe repository op <strong>"uploading an existing file"</strong> → sleep het bestand <em>ecstatic_dance_finance.html</em> erin → kies als bestandsnaam <strong>index.html</strong> → klik "Commit changes".</p>
+      </div>
+    </div>
+
+    <div class="settings-step">
+      <div class="step-num">C</div>
+      <div class="step-body">
+        <h3>Zet GitHub Pages aan</h3>
+        <p>Ga naar <strong>Settings → Pages</strong> → bij "Source" kies <em>Deploy from a branch</em> → branch: <em>main</em>, map: <em>/ (root)</em> → klik Save.</p>
+        <p style="margin-top:8px">Na een paar minuten is de pagina live op:<br>
+        <strong>https://[jouw-gebruikersnaam].github.io/ecstatic-dance-finance/</strong></p>
+      </div>
+    </div>
+
+    <div class="settings-step">
+      <div class="step-num">D</div>
+      <div class="step-body">
+        <h3>Deel de link met je team</h3>
+        <p>Iedereen die de link heeft kan de simulator gebruiken. De Supabase-instellingen worden lokaal opgeslagen in de browser — elk teamlid vult de URL en sleutel één keer in onder "Instellingen".</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     MODALS
+═══════════════════════════════ -->
+
+<!-- Modal: event opslaan vanuit calculator -->
+<div class="modal-bg" id="modal-slaop">
+  <div class="modal">
+    <h2>💾 Event registreren</h2>
+    <div class="grid-2" style="margin-bottom:14px">
+      <div>
+        <label>Datum</label>
+        <input type="date" id="sop-datum">
+      </div>
+      <div>
+        <label>Naam / omschrijving (optioneel)</label>
+        <input type="text" id="sop-naam" placeholder="bv. Dance #42">
+      </div>
+    </div>
+    <div class="card" style="background:var(--surface2);margin-bottom:14px">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px">Berekende waarden (vanuit calculator)</div>
+      <div class="grid-4" id="sop-preview"></div>
+    </div>
+    <div>
+      <label>Notities</label>
+      <textarea id="sop-notities" placeholder="Bijzonderheden, weersomstandigheden, locatie..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="sluitModal('modal-slaop')">Annuleren</button>
+      <button class="btn btn-primary" onclick="slaEventOp()">Opslaan in Supabase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: nieuw event handmatig -->
+<div class="modal-bg" id="modal-nieuw">
+  <div class="modal">
+    <h2>+ Nieuw event registreren</h2>
+    <div class="grid-2" style="margin-bottom:12px">
+      <div><label>Datum</label><input type="date" id="n-datum"></div>
+      <div><label>Naam</label><input type="text" id="n-naam" placeholder="bv. Dance #42"></div>
+    </div>
+    <div class="grid-3" style="margin-bottom:12px">
+      <div><label>Deelnemers (betaald)</label><input type="number" id="n-deel" value="70" min="0"></div>
+      <div><label>waarvan sociaal tarief</label><input type="number" id="n-soc" value="10" min="0"></div>
+      <div><label>Vrijwilligers</label><input type="number" id="n-vrijw" value="6" min="0"></div>
+    </div>
+    <div class="grid-3" style="margin-bottom:12px">
+      <div><label>Bruto omzet (€)</label><input type="number" id="n-omzet" value="0" min="0" step="10"></div>
+      <div><label>Vaste kosten (€)</label><input type="number" id="n-vast" value="0" min="0" step="10"></div>
+      <div><label>Materiaalfonds (€)</label><input type="number" id="n-fonds" value="0" min="0" step="10"></div>
+    </div>
+    <div class="grid-2" style="margin-bottom:12px">
+      <div><label>Vrijwilligerswaardering (€)</label><input type="number" id="n-vrijww" value="25" min="0" step="5"></div>
+      <div><label>Netto resultaat (€)</label><input type="number" id="n-netto" value="0" step="10" style="color:var(--accent2)"></div>
+    </div>
+    <div style="margin-bottom:12px"><label>Notities</label><textarea id="n-notities" placeholder="Bijzonderheden..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="sluitModal('modal-nieuw')">Annuleren</button>
+      <button class="btn btn-primary" onclick="slaHandmatigOp()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// STATE & CONSTANTS
+// ═══════════════════════════════════════════════
+let kostenRegels = [
+  {naam:'DJ',               bedrag:250},
+  {naam:'Zaalverhuur',      bedrag:150},
+  {naam:'Ceremonieleider',  bedrag:60},
+  {naam:'Technicus',        bedrag:40},
+  {naam:'Organisatiekosten',bedrag:500},
+];
+let freq = 'tweewekelijks';
+const MAANDEN      = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+const MAANDEN_KORT = ['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const fmt  = v => '€' + Math.round(v).toLocaleString('nl-NL');
+const fmtS = v => { const a=Math.abs(v); const s=v<0?'-':''; return s+'€'+(a>=1000?(a/1000).toFixed(1)+'k':Math.round(a)); };
+const kleur = v => v>=0 ? 'var(--accent2)' : 'var(--red)';
+const today = () => new Date().toISOString().split('T')[0];
+function syncR(el,id,suf=''){$(id).textContent=el.value+suf;}
+
+function toast(msg, type='ok') {
+  const t=$('toast'); t.textContent=msg; t.className='show '+type;
+  setTimeout(()=>t.className='',2800);
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function showTab(naam, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  $('tab-'+naam).classList.add('active');
+  btn.classList.add('active');
+  if(naam==='projectie') calcProj();
+  if(naam==='records')   laadRecords();
+  if(naam==='instellingen') laadInstellingen();
+}
+
+function setFreq(f,btn) {
+  freq=f;
+  document.querySelectorAll('#freq-twee,#freq-week').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  calcProj();
+}
+
+// ═══════════════════════════════════════════════
+// KOSTEN REGELS
+// ═══════════════════════════════════════════════
+function renderKosten() {
+  const wrap=$('kostenRegels'); wrap.innerHTML='';
+  kostenRegels.forEach((r,i)=>{
+    const div=document.createElement('div'); div.className='cost-line';
+    div.innerHTML=`<input type="text" value="${r.naam}" placeholder="Kostenpost" oninput="kostenRegels[${i}].naam=this.value">
+      <input type="number" value="${r.bedrag}" min="0" step="5" placeholder="€" oninput="kostenRegels[${i}].bedrag=parseFloat(this.value)||0;calc()">
+      <button class="remove-btn" onclick="verwijderRegel(${i})">×</button>`;
+    wrap.appendChild(div);
+  });
+}
+function voegKostenToe()   {kostenRegels.push({naam:'',bedrag:0});renderKosten();}
+function verwijderRegel(i) {kostenRegels.splice(i,1);renderKosten();calc();}
+
+// ═══════════════════════════════════════════════
+// PER-EVENT INPUTS
+// ═══════════════════════════════════════════════
+function getEI() {
+  const deel    = +$('deelnemers').value;
+  const vrijw   = +$('vrijwilligers').value;
+  const stdP    = +$('stdPrijs').value||0;
+  const socP    = +$('socPrijs').value||0;
+  const socPct  = +$('socPct').value/100;
+  const matPct  = +$('materiaalPct').value/100;
+  const vrijwW  = +$('vrijwWaard').value||0;
+  const vast    = kostenRegels.reduce((s,r)=>s+(+r.bedrag||0),0);
+  const socN    = Math.round(deel*socPct);
+  const stdN    = deel-socN;
+  const omzet   = stdN*stdP+socN*socP;
+  const matF    = omzet*matPct;
+  const totK    = vast+matF+vrijwW;
+  const netto   = omzet-totK;
+  const gemTix  = stdP*(1-socPct)+socP*socPct;
+  const be      = (vast+vrijwW)/(gemTix*(1-matPct)||1);
+  return {deel,vrijw,stdP,socP,socPct,matPct,vrijwW,vast,socN,stdN,omzet,matF,totK,netto,gemTix,be};
+}
+
+// ═══════════════════════════════════════════════
+// PER-EVENT CALC
+// ═══════════════════════════════════════════════
+function calc() {
+  const d=getEI();
+  $('res-omzet').textContent    =fmt(d.omzet);
+  $('res-omzet-sub').textContent=`${d.stdN} × ${fmt(d.stdP)} · ${d.socN} × ${fmt(d.socP)}`;
+  $('res-kosten').textContent    =fmt(d.totK);
+  $('res-kosten-sub').textContent=`Vast ${fmt(d.vast)} · Fonds ${fmt(d.matF)} · Vrijw. ${fmt(d.vrijwW)}`;
+  const netEl=$('res-netto');
+  netEl.textContent=fmt(d.netto);
+  netEl.className='val '+(d.netto>=0?'green':'red');
+  $('res-netto-sub').textContent=d.netto>=0?`+${((d.netto/Math.max(d.omzet,1))*100).toFixed(1)}% marge`:'verlies';
+  const be=Math.ceil(d.be);
+  $('res-be').textContent    =be;
+  $('res-be-sub').textContent=`gem. ticket ${fmt(d.gemTix)}`;
+  const vul=Math.min(100,(d.deel/Math.max(be,1))*100);
+  const bar=$('profit-bar');
+  bar.style.width=vul+'%';
+  bar.style.background=d.netto>=0?'var(--accent2)':'var(--red)';
+  const ib=$('insight-box'); const marge=d.deel-be;
+  if(d.netto>=0){ib.className='insight good';ib.innerHTML=`✅ Break-even bij <strong>${be}</strong> deelnemers. Surplus dit event: <strong>${fmt(d.netto)}</strong>.`;}
+  else if(be<=120){ib.className='insight warn';ib.innerHTML=`⚠️ Je hebt <strong>${be}</strong> deelnemers nodig voor break-even — <strong>${Math.abs(Math.round(marge))}</strong> meer dan nu.`;}
+  else{ib.className='insight bad';ib.innerHTML=`❌ Break-even van <strong>${be}</strong> is moeilijk haalbaar. Bekijk vaste kosten of pricing.`;}
+  tekenEventGrafiek(d);
+}
+
+// ═══════════════════════════════════════════════
+// SVG HELPERS
+// ═══════════════════════════════════════════════
+function svgEl(tag,attrs){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+function maakSVG(w,h){return svgEl('svg',{viewBox:`0 0 ${w} ${h}`,xmlns:'http://www.w3.org/2000/svg',style:'overflow:visible'});}
+
+// ═══════════════════════════════════════════════
+// EVENT BREAKDOWN GRAFIEK
+// ═══════════════════════════════════════════════
+function tekenEventGrafiek(d) {
+  const wrap=$('event-chart-wrap'); wrap.innerHTML='';
+  const W=700,H=210,pad={l:175,r:20,t:16,b:10};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const svg=maakSVG(W,H);
+  const rijen=[
+    {label:'Bruto omzet',             val:d.omzet,  kl:'rgba(180,142,247,0.85)'},
+    {label:'Vaste kosten',            val:d.vast,   kl:'rgba(247,197,159,0.85)'},
+    {label:'Materiaalfonds',          val:d.matF,   kl:'rgba(180,142,247,0.4)'},
+    {label:'Vrijwilligerswaardering', val:d.vrijwW, kl:'rgba(126,207,179,0.55)'},
+    {label:'Netto resultaat',         val:d.netto,  kl:d.netto>=0?'rgba(126,207,179,0.9)':'rgba(247,124,124,0.9)'},
+  ].filter(r=>r.val!==0||r.label==='Netto resultaat');
+  const maxW=Math.max(...rijen.map(r=>Math.abs(r.val)),100);
+  const rH=Math.min(30,(iH-8)/rijen.length);
+  rijen.forEach((r,i)=>{
+    const y=pad.t+i*(rH+8);
+    const bW=Math.max(2,(Math.abs(r.val)/maxW)*iW);
+    const lbl=svgEl('text',{x:pad.l-8,y:y+rH/2+5,fill:'#8b87aa','font-size':'11','text-anchor':'end','font-family':'Segoe UI,system-ui,sans-serif'});
+    lbl.textContent=r.label; svg.appendChild(lbl);
+    svg.appendChild(svgEl('rect',{x:pad.l,y,width:bW,height:rH,fill:r.kl,rx:'4'}));
+    const vkl=r.label==='Netto resultaat'?kleur(r.val):'#e8e3f5';
+    const vt=svgEl('text',{x:pad.l+bW+6,y:y+rH/2+5,fill:vkl,'font-size':'11','font-weight':'600','font-family':'Segoe UI,system-ui,sans-serif'});
+    vt.textContent=fmt(r.val); svg.appendChild(vt);
+  });
+  wrap.appendChild(svg);
+}
+
+// ═══════════════════════════════════════════════
+// PROJECTIE
+// ═══════════════════════════════════════════════
+function eventsInMaand(idx,f){return f==='tweewekelijks'?2:[4,4,4,5,4,4,5,4,4,4,5,4][idx%12];}
+
+function calcProj() {
+  const baseDeel  =+$('proj-deel').value||70;
+  const groei     =+$('proj-groei').value/100;
+  const inv       =+$('proj-invest').value||0;
+  const invMo     =+$('proj-invest-mo').value||1;
+  const startKas  =+$('proj-kas').value||0;
+  const startMaand=+$('proj-startmaand').value;
+  const d0=getEI();
+  let cum=startKas,matTot=0; const rijen=[];
+  for(let i=0;i<12;i++){
+    const mIdx=(startMaand+i)%12; const m=i+1;
+    const evts=eventsInMaand(mIdx,freq);
+    const gd=Math.round(baseDeel*Math.pow(1+groei,i));
+    const socN=Math.round(gd*d0.socPct), stdN=gd-socN;
+    const omzet=(stdN*d0.stdP+socN*d0.socP)*evts;
+    const matF=omzet*d0.matPct;
+    const vastK=(d0.vast+d0.vrijwW)*evts;
+    const een=m===invMo?inv:0;
+    const netto=omzet-vastK-matF-een;
+    matTot+=matF; cum+=netto;
+    rijen.push({m,mIdx,label:MAANDEN_KORT[mIdx],labelVol:MAANDEN[mIdx],evts,gd,omzet,vastK,matF,netto,cum,matTot,een});
+  }
+  const tO=rijen.reduce((s,r)=>s+r.omzet,0);
+  const tK=rijen.reduce((s,r)=>s+r.vastK+r.matF+r.een,0);
+  const tN=rijen.reduce((s,r)=>s+r.netto,0);
+  const tE=rijen.reduce((s,r)=>s+r.evts,0);
+  $('proj-samenvatting').innerHTML=`
+    <div class="proj-box"><div class="p-label">Totaal Events</div><div class="p-val" style="color:var(--accent)">${tE}</div></div>
+    <div class="proj-box"><div class="p-label">Totale Omzet</div><div class="p-val" style="color:var(--accent)">${fmtS(tO)}</div></div>
+    <div class="proj-box"><div class="p-label">Totale Kosten</div><div class="p-val" style="color:var(--accent3)">${fmtS(tK)}</div></div>
+    <div class="proj-box"><div class="p-label">Jaarresultaat</div><div class="p-val" style="color:${kleur(tN)}">${fmtS(tN)}</div></div>
+    <div class="proj-box"><div class="p-label">Materiaalfonds</div><div class="p-val" style="color:var(--accent)">${fmtS(rijen[11].matTot)}</div></div>
+    <div class="proj-box"><div class="p-label">Eindkassaldo</div><div class="p-val" style="color:${kleur(cum)}">${fmtS(cum)}</div></div>`;
+  $('proj-tbody').innerHTML=rijen.map(r=>`<tr>
+    <td style="color:var(--muted)">${r.labelVol}${r.een?'<span class="pill">💰</span>':''}</td>
+    <td class="r">${r.evts}</td><td class="r">${r.gd}</td>
+    <td class="r" style="color:var(--accent)">${fmtS(r.omzet)}</td>
+    <td class="r" style="color:var(--accent3)">${fmtS(r.vastK)}</td>
+    <td class="r" style="color:var(--muted)">${fmtS(r.een+r.matF)}</td>
+    <td class="r" style="color:${kleur(r.netto)};font-weight:600">${fmtS(r.netto)}</td>
+    <td class="r" style="color:${kleur(r.cum)};font-weight:700">${fmtS(r.cum)}</td></tr>`).join('');
+  tekenProjGrafiek(rijen);
+  tekenMateriaalGrafiek(rijen,inv);
+}
+
+function tekenProjGrafiek(rijen) {
+  const wrap=$('proj-chart-wrap'); wrap.innerHTML='';
+  const W=700,H=310,pad={l:55,r:62,t:28,b:40};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const svg=maakSVG(W,H);
+  const alleV=[...rijen.map(r=>r.omzet),...rijen.map(r=>r.vastK+r.matF+r.een)];
+  const maxBar=Math.max(...alleV,100);
+  const cV=rijen.map(r=>r.cum);
+  const minC=Math.min(...cV,0),maxC=Math.max(...cV,100),rangeC=maxC-minC||1;
+  const n=rijen.length,gW=iW/n,bW=gW*0.32;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+(iH/4)*i;
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
+    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#8b87aa','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxBar*(1-i/4)); svg.appendChild(t);
+    const t2=svgEl('text',{x:pad.l+iW+6,y:y+4,fill:'rgba(126,207,179,0.7)','font-size':'9','text-anchor':'start','font-family':'system-ui'}); t2.textContent=fmtS(minC+rangeC*(1-i/4)); svg.appendChild(t2);
+  }
+  rijen.forEach((r,i)=>{
+    const cx=pad.l+i*gW+gW/2;
+    const oH=Math.max(2,(r.omzet/maxBar)*iH);
+    svg.appendChild(svgEl('rect',{x:cx-bW-1,y:pad.t+iH-oH,width:bW,height:oH,fill:'rgba(180,142,247,0.55)',rx:'3'}));
+    const kV=r.vastK+r.matF+r.een,kH=Math.max(2,(kV/maxBar)*iH);
+    svg.appendChild(svgEl('rect',{x:cx+1,y:pad.t+iH-kH,width:bW,height:kH,fill:'rgba(247,197,159,0.55)',rx:'3'}));
+    const lbl=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#8b87aa','font-size':'10','text-anchor':'middle','font-family':'system-ui'}); lbl.textContent=r.label; svg.appendChild(lbl);
+  });
+  const pts=rijen.map((r,i)=>({cx:pad.l+i*gW+gW/2,cy:pad.t+iH-((r.cum-minC)/rangeC)*iH,v:r.cum}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pad.t+iH} ${pts.map(p=>`L${p.cx},${p.cy}`).join(' ')} L${pts[pts.length-1].cx},${pad.t+iH} Z`,fill:'rgba(126,207,179,0.08)'}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pts[0].cy} ${pts.slice(1).map(p=>`L${p.cx},${p.cy}`).join(' ')}`,fill:'none',stroke:'rgba(126,207,179,0.9)','stroke-width':'2.5','stroke-linejoin':'round'}));
+  pts.forEach(p=>{
+    svg.appendChild(svgEl('circle',{cx:p.cx,cy:p.cy,r:'4',fill:'var(--accent2)'}));
+    const t=svgEl('text',{x:p.cx,y:p.cy-8,fill:'rgba(126,207,179,0.85)','font-size':'9','text-anchor':'middle','font-family':'system-ui'}); t.textContent=fmtS(p.v); svg.appendChild(t);
+  });
+  if(minC<0&&maxC>0){const zy=pad.t+iH-((0-minC)/rangeC)*iH; svg.appendChild(svgEl('line',{x1:pad.l,y1:zy,x2:pad.l+iW,y2:zy,stroke:'rgba(247,124,124,0.4)','stroke-width':'1','stroke-dasharray':'4,3'}));}
+  [{c:'rgba(180,142,247,0.7)',l:'Omzet'},{c:'rgba(247,197,159,0.7)',l:'Kosten'},{c:'rgba(126,207,179,0.9)',l:'Cumulatief kassaldo'}].forEach((x,i)=>{
+    const lx=pad.l+i*130;
+    svg.appendChild(svgEl('rect',{x:lx,y:pad.t-18,width:10,height:10,fill:x.c,rx:'2'}));
+    const t=svgEl('text',{x:lx+14,y:pad.t-9,fill:'#8b87aa','font-size':'10','font-family':'system-ui'}); t.textContent=x.l; svg.appendChild(t);
+  });
+  wrap.appendChild(svg);
+}
+
+function tekenMateriaalGrafiek(rijen,inv) {
+  const wrap=$('materiaal-chart-wrap'); wrap.innerHTML='';
+  const W=700,H=200,pad={l:55,r:20,t:22,b:36};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const svg=maakSVG(W,H);
+  const maxV=Math.max(...rijen.map(r=>r.matTot),inv,100);
+  const n=rijen.length,gW=iW/n;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+(iH/4)*i;
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
+    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#8b87aa','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxV*(1-i/4)); svg.appendChild(t);
+  }
+  const pts=rijen.map((r,i)=>({cx:pad.l+i*gW+gW/2,cy:pad.t+iH-((r.matTot/maxV)*iH),v:r.matTot}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pad.t+iH} ${pts.map(p=>`L${p.cx},${p.cy}`).join(' ')} L${pts[pts.length-1].cx},${pad.t+iH} Z`,fill:'rgba(180,142,247,0.12)'}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pts[0].cy} ${pts.slice(1).map(p=>`L${p.cx},${p.cy}`).join(' ')}`,fill:'none',stroke:'rgba(180,142,247,0.85)','stroke-width':'2','stroke-linejoin':'round'}));
+  pts.forEach(p=>svg.appendChild(svgEl('circle',{cx:p.cx,cy:p.cy,r:'3.5',fill:'var(--accent)'})));
+  rijen.forEach((r,i)=>{
+    const cx=pad.l+i*gW+gW/2;
+    const t=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#8b87aa','font-size':'10','text-anchor':'middle','font-family':'system-ui'}); t.textContent=r.label; svg.appendChild(t);
+  });
+  if(inv>0){
+    const ty=pad.t+iH-((inv/maxV)*iH);
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:ty,x2:pad.l+iW,y2:ty,stroke:'rgba(247,124,124,0.55)','stroke-width':'1.5','stroke-dasharray':'5,4'}));
+    const lt=svgEl('text',{x:pad.l+iW-2,y:ty-5,fill:'rgba(247,124,124,0.7)','font-size':'9','text-anchor':'end','font-family':'system-ui'}); lt.textContent=`Doel ${fmtS(inv)}`; svg.appendChild(lt);
+  }
+  const last=pts[pts.length-1];
+  const fl=svgEl('text',{x:last.cx,y:last.cy-8,fill:'var(--accent)','font-size':'9.5','text-anchor':'middle','font-family':'system-ui','font-weight':'600'}); fl.textContent=fmtS(last.v); svg.appendChild(fl);
+  wrap.appendChild(svg);
+}
+
+// ═══════════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════════
+function getSB() {
+  const url = localStorage.getItem('sb_url')||'';
+  const key = localStorage.getItem('sb_key')||'';
+  return {url:url.replace(/\/$/,''), key};
+}
+function sbHeaders(key){return {'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json','Prefer':'return=representation'};}
+
+async function sbFetch(method, path, body=null) {
+  const {url,key}=getSB();
+  if(!url||!key) throw new Error('Supabase niet ingesteld. Ga naar Instellingen.');
+  const opts={method, headers:sbHeaders(key)};
+  if(body) opts.body=JSON.stringify(body);
+  const res=await fetch(url+'/rest/v1/'+path, opts);
+  if(!res.ok){const t=await res.text(); throw new Error(t);}
+  if(res.status===204) return null;
+  return res.json();
+}
+
+// ═══════════════════════════════════════════════
+// RECORDS TAB
+// ═══════════════════════════════════════════════
+async function laadRecords() {
+  const wrap=$('rec-table-wrap');
+  wrap.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>Laden...</p></div>';
+  try {
+    const data=await sbFetch('GET','dans_events?order=datum.desc&select=*');
+    if(!data||data.length===0){
+      $('rec-samenvatting').style.display='none';
+      $('rec-grafiek-card').style.display='none';
+      wrap.innerHTML='<div class="empty-state"><div class="icon">🌀</div><p style="margin-bottom:8px">Nog geen evenementen geregistreerd.</p><button class="btn btn-primary btn-sm" onclick="openNieuwModal()">+ Eerste event toevoegen</button></div>';
+      return;
+    }
+    toonRecords(data);
+  } catch(e) {
+    $('rec-samenvatting').style.display='none';
+    $('rec-grafiek-card').style.display='none';
+    wrap.innerHTML=`<div class="empty-state"><div class="icon">⚠️</div><p style="color:var(--red);margin-bottom:8px">${e.message}</p><button class="btn btn-secondary btn-sm" onclick="showTab('instellingen',$('tb-instellingen'))">Instellingen openen</button></div>`;
+  }
+}
+
+function toonRecords(data) {
+  // KPIs
+  const totO=data.reduce((s,r)=>s+(r.omzet_bruto||0),0);
+  const totN=data.reduce((s,r)=>s+(r.netto||0),0);
+  const totD=data.reduce((s,r)=>s+(r.deelnemers_betaald||0),0);
+  const gemD=data.length>0?Math.round(totD/data.length):0;
+  const recSam=$('rec-samenvatting');
+  recSam.style.display='grid';
+  recSam.innerHTML=`
+    <div class="proj-box"><div class="p-label">Aantal Events</div><div class="p-val" style="color:var(--accent)">${data.length}</div></div>
+    <div class="proj-box"><div class="p-label">Totale Omzet</div><div class="p-val" style="color:var(--accent)">${fmtS(totO)}</div></div>
+    <div class="proj-box"><div class="p-label">Totaal Netto</div><div class="p-val" style="color:${kleur(totN)}">${fmtS(totN)}</div></div>
+    <div class="proj-box"><div class="p-label">Gem. Deelnemers</div><div class="p-val" style="color:var(--accent)">${gemD}</div></div>`;
+
+  // Grafiek
+  $('rec-grafiek-card').style.display='block';
+  tekenRecordGrafiek([...data].reverse());
+
+  // Tabel
+  const wrap=$('rec-table-wrap');
+  wrap.innerHTML=`<div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Datum</th><th>Naam</th><th style="text-align:right">Deel.</th>
+      <th style="text-align:right">Omzet</th><th style="text-align:right">Kosten</th>
+      <th style="text-align:right">Netto</th><th>Notities</th><th></th>
+    </tr></thead>
+    <tbody>${data.map(r=>`<tr>
+      <td style="color:var(--muted);white-space:nowrap">${r.datum||'—'}</td>
+      <td>${r.naam||'—'}</td>
+      <td class="r">${r.deelnemers_betaald||'—'}</td>
+      <td class="r" style="color:var(--accent)">${r.omzet_bruto!=null?fmtS(r.omzet_bruto):'—'}</td>
+      <td class="r" style="color:var(--accent3)">${r.kosten_vast!=null?fmtS((r.kosten_vast||0)+(r.kosten_fonds||0)+(r.kosten_vrijw||0)):'—'}</td>
+      <td class="r"><span class="badge ${(r.netto||0)>=0?'badge-green':'badge-red'}">${r.netto!=null?fmtS(r.netto):'—'}</span></td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.8rem">${r.notities||''}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="verwijderRecord(${r.id})">✕</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function tekenRecordGrafiek(data) {
+  const wrap=$('rec-chart-wrap'); wrap.innerHTML='';
+  if(data.length<2){wrap.innerHTML='<p style="color:var(--muted);font-size:.85rem;padding:10px 0">Minimaal 2 evenementen nodig voor een grafiek.</p>';return;}
+  const W=700,H=220,pad={l:55,r:20,t:30,b:50};
+  const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  const svg=maakSVG(W,H);
+  const maxV=Math.max(...data.map(r=>r.omzet_bruto||0),100);
+  const n=data.length,gW=iW/n,bW=Math.min(gW*0.6,40);
+  for(let i=0;i<=4;i++){
+    const y=pad.t+(iH/4)*i;
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
+    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#8b87aa','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxV*(1-i/4)); svg.appendChild(t);
+  }
+  data.forEach((r,i)=>{
+    const cx=pad.l+i*gW+gW/2;
+    const oH=Math.max(2,((r.omzet_bruto||0)/maxV)*iH);
+    const isPos=(r.netto||0)>=0;
+    svg.appendChild(svgEl('rect',{x:cx-bW/2,y:pad.t+iH-oH,width:bW,height:oH,fill:isPos?'rgba(180,142,247,0.65)':'rgba(247,124,124,0.55)',rx:'4'}));
+    const nettoH=Math.max(2,(Math.abs(r.netto||0)/maxV)*iH);
+    svg.appendChild(svgEl('rect',{x:cx-bW/2+2,y:pad.t+iH-nettoH,width:bW-4,height:nettoH,fill:isPos?'rgba(126,207,179,0.7)':'rgba(247,124,124,0.8)',rx:'3'}));
+    // label
+    const lbl=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#8b87aa','font-size':'9','text-anchor':'middle','font-family':'system-ui',transform:`rotate(-35,${cx},${pad.t+iH+14})`});
+    lbl.textContent=(r.datum||'').slice(5)||''; svg.appendChild(lbl);
+  });
+  // legend
+  [{c:'rgba(180,142,247,0.65)',l:'Omzet'},{c:'rgba(126,207,179,0.7)',l:'Netto (positief)'},{c:'rgba(247,124,124,0.8)',l:'Netto (verlies)'}].forEach((x,i)=>{
+    const lx=pad.l+i*145;
+    svg.appendChild(svgEl('rect',{x:lx,y:pad.t-20,width:10,height:10,fill:x.c,rx:'2'}));
+    const t=svgEl('text',{x:lx+14,y:pad.t-11,fill:'#8b87aa','font-size':'9.5','font-family':'system-ui'}); t.textContent=x.l; svg.appendChild(t);
+  });
+  wrap.appendChild(svg);
+}
+
+async function verwijderRecord(id) {
+  if(!confirm('Dit evenement definitief verwijderen?')) return;
+  try {
+    await sbFetch('DELETE',`dans_events?id=eq.${id}`);
+    toast('Evenement verwijderd');
+    laadRecords();
+  } catch(e){toast('Fout: '+e.message,'err');}
+}
+
+// ═══════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════
+function openSlaOpModal() {
+  const d=getEI();
+  $('sop-datum').value=today();
+  $('sop-naam').value='';
+  $('sop-notities').value='';
+  $('sop-preview').innerHTML=`
+    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Deelnemers</div><strong>${d.deel}</strong></div>
+    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Omzet</div><strong style="color:var(--accent)">${fmt(d.omzet)}</strong></div>
+    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Kosten</div><strong style="color:var(--accent3)">${fmt(d.totK)}</strong></div>
+    <div><div class="lbl" style="font-size:.72rem;color:var(--muted)">Netto</div><strong style="color:${kleur(d.netto)}">${fmt(d.netto)}</strong></div>`;
+  $('modal-slaop').classList.add('open');
+}
+
+function openNieuwModal() {
+  $('n-datum').value=today();
+  $('n-naam').value='';
+  $('n-notities').value='';
+  $('modal-nieuw').classList.add('open');
+}
+
+function sluitModal(id){$(id).classList.remove('open');}
+
+// Klik buiten modal sluit hem
+document.querySelectorAll('.modal-bg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open');}));
+
+async function slaEventOp() {
+  const d=getEI();
+  const datum=$('sop-datum').value;
+  if(!datum){alert('Vul een datum in.'); return;}
+  const payload={
+    datum, naam:$('sop-naam').value||null,
+    deelnemers_betaald:d.deel, deelnemers_sociaal:d.socN,
+    vrijwilligers:d.vrijw, omzet_bruto:Math.round(d.omzet),
+    kosten_vast:Math.round(d.vast), kosten_fonds:Math.round(d.matF),
+    kosten_vrijw:Math.round(d.vrijwW), netto:Math.round(d.netto),
+    notities:$('sop-notities').value||null
+  };
+  try{
+    await sbFetch('POST','dans_events',payload);
+    sluitModal('modal-slaop');
+    toast('✅ Event opgeslagen!');
+  }catch(e){toast('Fout: '+e.message,'err');}
+}
+
+async function slaHandmatigOp() {
+  const datum=$('n-datum').value;
+  if(!datum){alert('Vul een datum in.'); return;}
+  const omzet=+$('n-omzet').value||0, vast=+$('n-vast').value||0;
+  const fonds=+$('n-fonds').value||0, vw=+$('n-vrijww').value||0;
+  const netto=+$('n-netto').value||(omzet-vast-fonds-vw);
+  const payload={
+    datum, naam:$('n-naam').value||null,
+    deelnemers_betaald:+$('n-deel').value||null,
+    deelnemers_sociaal:+$('n-soc').value||null,
+    vrijwilligers:+$('n-vrijw').value||null,
+    omzet_bruto:omzet, kosten_vast:vast,
+    kosten_fonds:fonds, kosten_vrijw:vw,
+    netto, notities:$('n-notities').value||null
+  };
+  try{
+    await sbFetch('POST','dans_events',payload);
+    sluitModal('modal-nieuw');
+    toast('✅ Event opgeslagen!');
+    if($('tab-records').classList.contains('active')) laadRecords();
+  }catch(e){toast('Fout: '+e.message,'err');}
+}
+
+// ═══════════════════════════════════════════════
+// INSTELLINGEN
+// ═══════════════════════════════════════════════
+function laadInstellingen() {
+  $('sb-url').value=localStorage.getItem('sb_url')||'';
+  $('sb-key').value=localStorage.getItem('sb_key')||'';
+}
+
+function slaInstellingenOp() {
+  localStorage.setItem('sb_url',$('sb-url').value.trim());
+  localStorage.setItem('sb_key',$('sb-key').value.trim());
+}
+
+async function testVerbinding() {
+  const el=$('conn-status');
+  el.innerHTML='<div class="dot dot-idle"></div><span style="color:var(--muted)">Verbinding testen...</span>';
+  try{
+    await sbFetch('GET','dans_events?limit=1&select=id');
+    el.innerHTML='<div class="dot dot-ok"></div><span style="color:var(--accent2)">Verbinding geslaagd ✓</span>';
+    toast('Supabase verbonden!');
+  }catch(e){
+    el.innerHTML=`<div class="dot dot-err"></div><span style="color:var(--red)">Fout: ${e.message.slice(0,60)}</span>`;
+    toast('Verbinding mislukt','err');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+renderKosten();
+calc();
+</script>
+</body>
+</html>
