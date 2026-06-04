@@ -6,21 +6,21 @@
 <title>Ecstatic Dance · Financiële Simulator</title>
 <style>
 :root{
-  --bg:#0f0e17;--surface:#1a1828;--surface2:#221f35;--border:#2e2a48;
-  --accent:#b48ef7;--accent2:#7ecfb3;--accent3:#f7c59f;--red:#f77c7c;
-  --text:#e8e3f5;--muted:#8b87aa;--radius:14px;
+  --bg:#f4f6f9;--surface:#ffffff;--surface2:#edf1f5;--border:#d4dae4;
+  --accent:#344382;--accent2:#009c51;--accent3:#e8850a;--red:#d93636;
+  --text:#151718;--muted:#6b7280;--radius:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
 
-header{text-align:center;padding:36px 20px 24px;background:linear-gradient(160deg,#1a0d38 0%,#0f0e17 60%);border-bottom:1px solid var(--border);}
-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;}
-header h1 span{color:var(--accent);}
-header p{color:var(--muted);margin-top:6px;font-size:.9rem;}
+header{text-align:center;padding:36px 20px 24px;background:linear-gradient(160deg,#2a3470 0%,#344382 100%);border-bottom:1px solid var(--border);}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;color:#fff;}
+header h1 span{color:#7ecfb3;}
+header p{color:rgba(255,255,255,0.75);margin-top:6px;font-size:.9rem;}
 
 .tabs{display:flex;justify-content:center;gap:8px;padding:16px 20px;position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .tab-btn{padding:8px 20px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.88rem;font-weight:500;transition:all .2s;}
-.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#1a0d38;font-weight:700;}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;}
 
 .page{display:none;max-width:980px;margin:0 auto;padding:26px 18px 60px;}
 .page.active{display:block;}
@@ -34,7 +34,7 @@ header p{color:var(--muted);margin-top:6px;font-size:.9rem;}
 @media(max-width:680px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
 
 label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500;}
-input[type=number],input[type=text],input[type=date],textarea,select{
+input[type=number],input[type=text],input[type=date],input[type=email],input[type=password],textarea,select{
   width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;
   padding:8px 11px;color:var(--text);font-size:.92rem;outline:none;transition:border-color .2s;
   -webkit-appearance:none;appearance:none;font-family:inherit;
@@ -60,7 +60,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin-to
 
 /* Primary action buttons */
 .btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;transition:all .2s;font-family:inherit;}
-.btn-primary{background:var(--accent);color:#1a0d38;}
+.btn-primary{background:var(--accent);color:#fff;}
 .btn-primary:hover{opacity:.88;}
 .btn-secondary{background:var(--surface2);border:1.5px solid var(--border);color:var(--muted);}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
@@ -78,10 +78,10 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin-to
 .profit-bar-wrap{margin-top:16px;background:var(--surface2);border-radius:999px;height:9px;overflow:hidden;}
 .profit-bar{height:100%;border-radius:999px;transition:width .4s ease;}
 .insight{margin-top:12px;padding:11px 15px;border-radius:10px;font-size:.86rem;line-height:1.5;}
-.insight.good{background:#1a3528;border:1px solid #2e5944;color:var(--accent2);}
-.insight.bad{background:#3a1a1a;border:1px solid #5a2a2a;color:var(--red);}
-.insight.warn{background:#2e2410;border:1px solid #5a4820;color:var(--accent3);}
-.insight.info{background:#1a1e38;border:1px solid #2a3060;color:var(--accent);}
+.insight.good{background:#e6f4ed;border:1px solid #9fd4b8;color:#1a6b40;}
+.insight.bad{background:#fdeaea;border:1px solid #f0a8a8;color:#a82020;}
+.insight.warn{background:#fef3e2;border:1px solid #f5d08a;color:#8a5a00;}
+.insight.info{background:#e8ecf5;border:1px solid #8fa0cc;color:var(--accent);}
 
 hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
 
@@ -111,8 +111,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
 /* Status badge */
 .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.4px;}
-.badge-green{background:#1a3528;color:var(--accent2);border:1px solid #2e5944;}
-.badge-red{background:#3a1a1a;color:var(--red);border:1px solid #5a2a2a;}
+.badge-green{background:#e6f4ed;color:#1a6b40;border:1px solid #9fd4b8;}
+.badge-red{background:#fdeaea;color:#a82020;border:1px solid #f0a8a8;}
 
 /* Modal */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:center;justify-content:center;padding:20px;}
@@ -123,7 +123,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
 /* Settings */
 .settings-step{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px;}
-.step-num{min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#1a0d38;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;margin-top:2px;}
 .step-body{flex:1;}
 .step-body h3{font-size:.95rem;font-weight:600;margin-bottom:4px;}
 .step-body p{font-size:.83rem;color:var(--muted);line-height:1.55;}
@@ -137,9 +137,23 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 /* Toast */
 #toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:10px;font-size:.88rem;font-weight:600;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
 #toast.show{opacity:1;transform:translateY(0);}
-#toast.ok{background:#1a3528;border:1px solid #2e5944;color:var(--accent2);}
-#toast.err{background:#3a1a1a;border:1px solid #5a2a2a;color:var(--red);}
+#toast.ok{background:#e6f4ed;border:1px solid #9fd4b8;color:#1a6b40;}
+#toast.err{background:#fdeaea;border:1px solid #f0a8a8;color:#a82020;}
+
+/* Login screen */
+#login-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;align-items:center;justify-content:center;padding:20px;}
+#login-screen.active{display:flex;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px 36px;max-width:400px;width:100%;text-align:center;}
+.login-card h1{font-size:1.6rem;font-weight:700;margin-bottom:6px;}
+.login-card h1 span{color:var(--accent);}
+.login-card .sub{color:var(--muted);font-size:.88rem;margin-bottom:32px;}
+.login-field{text-align:left;margin-bottom:16px;}
+.login-field label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500;}
+#login-msg{font-size:.85rem;margin-top:14px;min-height:22px;}
+.login-forgot{display:block;margin-top:16px;font-size:.82rem;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit;}
+.login-forgot:hover{color:var(--accent);}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -154,6 +168,27 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <button class="tab-btn"         id="tb-records"    onclick="showTab('records',this)">📋 Registraties</button>
   <button class="tab-btn"         id="tb-instellingen" onclick="showTab('instellingen',this)">⚙️ Instellingen</button>
 </div>
+
+<!-- Login screen -->
+<div id="login-screen" class="active">
+  <div class="login-card">
+    <h1>🌀 <span>Ecstatic Dance</span></h1>
+    <p class="sub">Financiële Simulator · Log in om verder te gaan</p>
+    <div class="login-field">
+      <label>E-mailadres</label>
+      <input type="email" id="login-email" placeholder="jouw@email.nl" onkeydown="if(event.key==='Enter')$('login-pw').focus()">
+    </div>
+    <div class="login-field">
+      <label>Wachtwoord</label>
+      <input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doeLogin()">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:6px;padding:12px" onclick="doeLogin()" id="login-btn">Inloggen</button>
+    <div id="login-msg"></div>
+    <button class="login-forgot" onclick="wachtwoordVergeten()">Wachtwoord vergeten?</button>
+  </div>
+</div>
+
+<div id="main-app" style="display:none">
 
 <div id="toast"></div>
 
@@ -218,7 +253,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     </div>
   </div>
 
-  <div class="card" style="border-color:var(--accent);background:linear-gradient(135deg,#1a1828 0%,#1c1530 100%);">
+  <div class="card" style="border-color:var(--accent);background:linear-gradient(135deg,#eef0f8 0%,#f0f4fb 100%);">
     <div class="card-title">Resultaat</div>
     <div class="results-grid">
       <div class="result-box">
@@ -375,113 +410,26 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="page" id="tab-instellingen">
 
   <div class="card">
-    <div class="card-title">Supabase verbinding</div>
-
-    <div class="settings-step">
-      <div class="step-num">1</div>
-      <div class="step-body">
-        <h3>Maak een gratis Supabase-project aan</h3>
-        <p>Ga naar <strong>supabase.com</strong> → "Start your project" → maak een gratis account → maak een nieuw project.</p>
+    <div class="card-title">Account</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:3px">Ingelogd als</div>
+        <div id="inst-email" style="font-weight:600;color:var(--accent)">—</div>
       </div>
-    </div>
-
-    <div class="settings-step">
-      <div class="step-num">2</div>
-      <div class="step-body">
-        <h3>Maak de database-tabel aan</h3>
-        <p>Ga in je project naar <strong>SQL Editor</strong> en voer dit uit:</p>
-        <div class="code-block">create table dans_events (
-  id bigint primary key generated always as identity,
-  datum date not null,
-  naam text,
-  deelnemers_betaald integer,
-  deelnemers_sociaal integer,
-  vrijwilligers integer,
-  omzet_bruto numeric,
-  kosten_vast numeric,
-  kosten_fonds numeric,
-  kosten_vrijw numeric,
-  netto numeric,
-  notities text,
-  created_at timestamptz default now()
-);
-alter table dans_events enable row level security;
-create policy "team_access" on dans_events
-  for all using (true) with check (true);</div>
-      </div>
-    </div>
-
-    <div class="settings-step">
-      <div class="step-num">3</div>
-      <div class="step-body">
-        <h3>Haal je URL en sleutel op</h3>
-        <p>Ga naar <strong>Project Settings → API</strong>. Je hebt de <em>Project URL</em> en de <em>anon public key</em> nodig.</p>
-      </div>
-    </div>
-
-    <div class="settings-step">
-      <div class="step-num">4</div>
-      <div class="step-body">
-        <h3>Vul hieronder in</h3>
-        <div class="grid-2" style="margin-top:10px">
-          <div>
-            <label>Supabase Project URL</label>
-            <input type="text" id="sb-url" placeholder="https://xxxx.supabase.co" oninput="slaInstellingenOp()">
-          </div>
-          <div>
-            <label>Anon Public Key</label>
-            <input type="text" id="sb-key" placeholder="eyJhbGci..." oninput="slaInstellingenOp()">
-          </div>
-        </div>
-        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <button class="btn btn-secondary btn-sm" onclick="testVerbinding()">Verbinding testen</button>
-          <div class="connection-status" id="conn-status">
-            <div class="dot dot-idle"></div><span style="color:var(--muted)">Nog niet getest</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="card-title" style="margin-bottom:12px">Publiceren via GitHub Pages</div>
-
-    <div class="settings-step">
-      <div class="step-num">A</div>
-      <div class="step-body">
-        <h3>Maak een repository aan op GitHub</h3>
-        <p>Ga naar <strong>github.com</strong> → "New repository" → geef het een naam (bv. <em>ecstatic-dance-finance</em>) → maak het <strong>Public</strong> → klik "Create repository".</p>
-      </div>
-    </div>
-
-    <div class="settings-step">
-      <div class="step-num">B</div>
-      <div class="step-body">
-        <h3>Upload dit HTML-bestand</h3>
-        <p>Klik in je nieuwe repository op <strong>"uploading an existing file"</strong> → sleep het bestand <em>ecstatic_dance_finance.html</em> erin → kies als bestandsnaam <strong>index.html</strong> → klik "Commit changes".</p>
-      </div>
-    </div>
-
-    <div class="settings-step">
-      <div class="step-num">C</div>
-      <div class="step-body">
-        <h3>Zet GitHub Pages aan</h3>
-        <p>Ga naar <strong>Settings → Pages</strong> → bij "Source" kies <em>Deploy from a branch</em> → branch: <em>main</em>, map: <em>/ (root)</em> → klik Save.</p>
-        <p style="margin-top:8px">Na een paar minuten is de pagina live op:<br>
-        <strong>https://[jouw-gebruikersnaam].github.io/ecstatic-dance-finance/</strong></p>
-      </div>
-    </div>
-
-    <div class="settings-step">
-      <div class="step-num">D</div>
-      <div class="step-body">
-        <h3>Deel de link met je team</h3>
-        <p>Iedereen die de link heeft kan de simulator gebruiken. De Supabase-instellingen worden lokaal opgeslagen in de browser — elk teamlid vult de URL en sleutel één keer in onder "Instellingen".</p>
-      </div>
+      <button class="btn btn-secondary btn-sm" onclick="doeUitloggen()">Uitloggen</button>
     </div>
   </div>
 
+  <div class="card">
+    <div class="card-title">Wachtwoord wijzigen</div>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Stuur een wachtwoord-resetlink naar je e-mailadres.</p>
+    <button class="btn btn-secondary btn-sm" onclick="stuurResetLink()">Resetlink versturen</button>
+    <div id="reset-status" style="font-size:.83rem;margin-top:10px;min-height:18px"></div>
+  </div>
+
 </div>
+
+</div><!-- /main-app -->
 
 <!-- ═══════════════════════════════
      MODALS
@@ -518,27 +466,44 @@ create policy "team_access" on dans_events
 
 <!-- Modal: nieuw event handmatig -->
 <div class="modal-bg" id="modal-nieuw">
-  <div class="modal">
+  <div class="modal" style="max-width:600px">
     <h2>+ Nieuw event registreren</h2>
+
+    <div class="section-heading" style="margin-top:0;margin-bottom:10px;font-size:.8rem;color:var(--muted)">BASISGEGEVENS</div>
     <div class="grid-2" style="margin-bottom:12px">
       <div><label>Datum</label><input type="date" id="n-datum"></div>
-      <div><label>Naam</label><input type="text" id="n-naam" placeholder="bv. Dance #42"></div>
+      <div><label>Naam (optioneel)</label><input type="text" id="n-naam" placeholder="bv. Dance #42"></div>
     </div>
-    <div class="grid-3" style="margin-bottom:12px">
+    <div class="grid-3" style="margin-bottom:18px">
       <div><label>Deelnemers (betaald)</label><input type="number" id="n-deel" value="70" min="0"></div>
       <div><label>waarvan sociaal tarief</label><input type="number" id="n-soc" value="10" min="0"></div>
       <div><label>Vrijwilligers</label><input type="number" id="n-vrijw" value="6" min="0"></div>
     </div>
-    <div class="grid-3" style="margin-bottom:12px">
-      <div><label>Bruto omzet (€)</label><input type="number" id="n-omzet" value="0" min="0" step="10"></div>
-      <div><label>Vaste kosten (€)</label><input type="number" id="n-vast" value="0" min="0" step="10"></div>
-      <div><label>Materiaalfonds (€)</label><input type="number" id="n-fonds" value="0" min="0" step="10"></div>
+
+    <div class="section-heading" style="margin-bottom:10px;font-size:.8rem;color:var(--muted)">ONTVANGSTEN</div>
+    <div class="grid-2" style="margin-bottom:18px">
+      <div><label>Totaal cash (€)</label><input type="number" id="n-cash" value="0" min="0" step="5" oninput="calcModal()"></div>
+      <div><label>Totaal Hipsy (€)</label><input type="number" id="n-hipsy" value="0" min="0" step="5" oninput="calcModal()"></div>
     </div>
-    <div class="grid-2" style="margin-bottom:12px">
-      <div><label>Vrijwilligerswaardering (€)</label><input type="number" id="n-vrijww" value="25" min="0" step="5"></div>
-      <div><label>Netto resultaat (€)</label><input type="number" id="n-netto" value="0" step="10" style="color:var(--accent2)"></div>
+
+    <div class="section-heading" style="margin-bottom:8px;font-size:.8rem;color:var(--muted)">KOSTEN PER EVENT</div>
+    <div class="cost-lines" id="n-kosten-regels" style="margin-bottom:8px"></div>
+    <button class="add-btn" onclick="voegModalKostToe('event')" style="margin-bottom:18px">+ Kostenregel toevoegen</button>
+
+    <div class="section-heading" style="margin-bottom:6px;font-size:.8rem;color:var(--muted)">OVERIGE KOSTEN</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:10px">Bijv. website, platform, marketing — niet specifiek per event.</p>
+    <div class="cost-lines" id="n-overige-regels" style="margin-bottom:8px"></div>
+    <button class="add-btn" onclick="voegModalKostToe('overig')" style="margin-bottom:18px">+ Overige kostenregel toevoegen</button>
+
+    <div style="background:var(--surface2);border-radius:10px;padding:14px 16px;margin-bottom:14px">
+      <div class="grid-3">
+        <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Bruto omzet</div><div id="n-sum-omzet" style="font-weight:700;color:var(--accent);font-size:1.1rem">€0</div></div>
+        <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Totale kosten</div><div id="n-sum-kosten" style="font-weight:700;color:var(--accent3);font-size:1.1rem">€0</div></div>
+        <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Netto resultaat</div><div id="n-sum-netto" style="font-weight:700;font-size:1.1rem">€0</div></div>
+      </div>
     </div>
-    <div style="margin-bottom:12px"><label>Notities</label><textarea id="n-notities" placeholder="Bijzonderheden..."></textarea></div>
+
+    <div style="margin-bottom:14px"><label>Notities</label><textarea id="n-notities" placeholder="Bijzonderheden, sfeer, locatie..."></textarea></div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="sluitModal('modal-nieuw')">Annuleren</button>
       <button class="btn btn-primary" onclick="slaHandmatigOp()">Opslaan</button>
@@ -681,18 +646,18 @@ function tekenEventGrafiek(d) {
   const iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
   const svg=maakSVG(W,H);
   const rijen=[
-    {label:'Bruto omzet',             val:d.omzet,  kl:'rgba(180,142,247,0.85)'},
-    {label:'Vaste kosten',            val:d.vast,   kl:'rgba(247,197,159,0.85)'},
-    {label:'Materiaalfonds',          val:d.matF,   kl:'rgba(180,142,247,0.4)'},
-    {label:'Vrijwilligerswaardering', val:d.vrijwW, kl:'rgba(126,207,179,0.55)'},
-    {label:'Netto resultaat',         val:d.netto,  kl:d.netto>=0?'rgba(126,207,179,0.9)':'rgba(247,124,124,0.9)'},
+    {label:'Bruto omzet',             val:d.omzet,  kl:'rgba(52,67,130,0.85)'},
+    {label:'Vaste kosten',            val:d.vast,   kl:'rgba(232,133,10,0.85)'},
+    {label:'Materiaalfonds',          val:d.matF,   kl:'rgba(52,67,130,0.35)'},
+    {label:'Vrijwilligerswaardering', val:d.vrijwW, kl:'rgba(0,156,81,0.55)'},
+    {label:'Netto resultaat',         val:d.netto,  kl:d.netto>=0?'rgba(0,156,81,0.9)':'rgba(217,54,54,0.9)'},
   ].filter(r=>r.val!==0||r.label==='Netto resultaat');
   const maxW=Math.max(...rijen.map(r=>Math.abs(r.val)),100);
   const rH=Math.min(30,(iH-8)/rijen.length);
   rijen.forEach((r,i)=>{
     const y=pad.t+i*(rH+8);
     const bW=Math.max(2,(Math.abs(r.val)/maxW)*iW);
-    const lbl=svgEl('text',{x:pad.l-8,y:y+rH/2+5,fill:'#8b87aa','font-size':'11','text-anchor':'end','font-family':'Segoe UI,system-ui,sans-serif'});
+    const lbl=svgEl('text',{x:pad.l-8,y:y+rH/2+5,fill:'#6b7280','font-size':'11','text-anchor':'end','font-family':'Segoe UI,system-ui,sans-serif'});
     lbl.textContent=r.label; svg.appendChild(lbl);
     svg.appendChild(svgEl('rect',{x:pad.l,y,width:bW,height:rH,fill:r.kl,rx:'4'}));
     const vkl=r.label==='Netto resultaat'?kleur(r.val):'#e8e3f5';
@@ -764,30 +729,30 @@ function tekenProjGrafiek(rijen) {
   const n=rijen.length,gW=iW/n,bW=gW*0.32;
   for(let i=0;i<=4;i++){
     const y=pad.t+(iH/4)*i;
-    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
-    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#8b87aa','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxBar*(1-i/4)); svg.appendChild(t);
-    const t2=svgEl('text',{x:pad.l+iW+6,y:y+4,fill:'rgba(126,207,179,0.7)','font-size':'9','text-anchor':'start','font-family':'system-ui'}); t2.textContent=fmtS(minC+rangeC*(1-i/4)); svg.appendChild(t2);
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(0,0,0,0.07)','stroke-width':'1'}));
+    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#6b7280','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxBar*(1-i/4)); svg.appendChild(t);
+    const t2=svgEl('text',{x:pad.l+iW+6,y:y+4,fill:'rgba(0,156,81,0.7)','font-size':'9','text-anchor':'start','font-family':'system-ui'}); t2.textContent=fmtS(minC+rangeC*(1-i/4)); svg.appendChild(t2);
   }
   rijen.forEach((r,i)=>{
     const cx=pad.l+i*gW+gW/2;
     const oH=Math.max(2,(r.omzet/maxBar)*iH);
-    svg.appendChild(svgEl('rect',{x:cx-bW-1,y:pad.t+iH-oH,width:bW,height:oH,fill:'rgba(180,142,247,0.55)',rx:'3'}));
+    svg.appendChild(svgEl('rect',{x:cx-bW-1,y:pad.t+iH-oH,width:bW,height:oH,fill:'rgba(52,67,130,0.55)',rx:'3'}));
     const kV=r.vastK+r.matF+r.een,kH=Math.max(2,(kV/maxBar)*iH);
-    svg.appendChild(svgEl('rect',{x:cx+1,y:pad.t+iH-kH,width:bW,height:kH,fill:'rgba(247,197,159,0.55)',rx:'3'}));
-    const lbl=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#8b87aa','font-size':'10','text-anchor':'middle','font-family':'system-ui'}); lbl.textContent=r.label; svg.appendChild(lbl);
+    svg.appendChild(svgEl('rect',{x:cx+1,y:pad.t+iH-kH,width:bW,height:kH,fill:'rgba(232,133,10,0.55)',rx:'3'}));
+    const lbl=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#6b7280','font-size':'10','text-anchor':'middle','font-family':'system-ui'}); lbl.textContent=r.label; svg.appendChild(lbl);
   });
   const pts=rijen.map((r,i)=>({cx:pad.l+i*gW+gW/2,cy:pad.t+iH-((r.cum-minC)/rangeC)*iH,v:r.cum}));
-  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pad.t+iH} ${pts.map(p=>`L${p.cx},${p.cy}`).join(' ')} L${pts[pts.length-1].cx},${pad.t+iH} Z`,fill:'rgba(126,207,179,0.08)'}));
-  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pts[0].cy} ${pts.slice(1).map(p=>`L${p.cx},${p.cy}`).join(' ')}`,fill:'none',stroke:'rgba(126,207,179,0.9)','stroke-width':'2.5','stroke-linejoin':'round'}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pad.t+iH} ${pts.map(p=>`L${p.cx},${p.cy}`).join(' ')} L${pts[pts.length-1].cx},${pad.t+iH} Z`,fill:'rgba(0,156,81,0.08)'}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pts[0].cy} ${pts.slice(1).map(p=>`L${p.cx},${p.cy}`).join(' ')}`,fill:'none',stroke:'rgba(0,156,81,0.9)','stroke-width':'2.5','stroke-linejoin':'round'}));
   pts.forEach(p=>{
     svg.appendChild(svgEl('circle',{cx:p.cx,cy:p.cy,r:'4',fill:'var(--accent2)'}));
-    const t=svgEl('text',{x:p.cx,y:p.cy-8,fill:'rgba(126,207,179,0.85)','font-size':'9','text-anchor':'middle','font-family':'system-ui'}); t.textContent=fmtS(p.v); svg.appendChild(t);
+    const t=svgEl('text',{x:p.cx,y:p.cy-8,fill:'rgba(0,156,81,0.85)','font-size':'9','text-anchor':'middle','font-family':'system-ui'}); t.textContent=fmtS(p.v); svg.appendChild(t);
   });
-  if(minC<0&&maxC>0){const zy=pad.t+iH-((0-minC)/rangeC)*iH; svg.appendChild(svgEl('line',{x1:pad.l,y1:zy,x2:pad.l+iW,y2:zy,stroke:'rgba(247,124,124,0.4)','stroke-width':'1','stroke-dasharray':'4,3'}));}
-  [{c:'rgba(180,142,247,0.7)',l:'Omzet'},{c:'rgba(247,197,159,0.7)',l:'Kosten'},{c:'rgba(126,207,179,0.9)',l:'Cumulatief kassaldo'}].forEach((x,i)=>{
+  if(minC<0&&maxC>0){const zy=pad.t+iH-((0-minC)/rangeC)*iH; svg.appendChild(svgEl('line',{x1:pad.l,y1:zy,x2:pad.l+iW,y2:zy,stroke:'rgba(217,54,54,0.4)','stroke-width':'1','stroke-dasharray':'4,3'}));}
+  [{c:'rgba(52,67,130,0.7)',l:'Omzet'},{c:'rgba(232,133,10,0.7)',l:'Kosten'},{c:'rgba(0,156,81,0.9)',l:'Cumulatief kassaldo'}].forEach((x,i)=>{
     const lx=pad.l+i*130;
     svg.appendChild(svgEl('rect',{x:lx,y:pad.t-18,width:10,height:10,fill:x.c,rx:'2'}));
-    const t=svgEl('text',{x:lx+14,y:pad.t-9,fill:'#8b87aa','font-size':'10','font-family':'system-ui'}); t.textContent=x.l; svg.appendChild(t);
+    const t=svgEl('text',{x:lx+14,y:pad.t-9,fill:'#6b7280','font-size':'10','font-family':'system-ui'}); t.textContent=x.l; svg.appendChild(t);
   });
   wrap.appendChild(svg);
 }
@@ -801,21 +766,21 @@ function tekenMateriaalGrafiek(rijen,inv) {
   const n=rijen.length,gW=iW/n;
   for(let i=0;i<=4;i++){
     const y=pad.t+(iH/4)*i;
-    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
-    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#8b87aa','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxV*(1-i/4)); svg.appendChild(t);
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(0,0,0,0.07)','stroke-width':'1'}));
+    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#6b7280','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxV*(1-i/4)); svg.appendChild(t);
   }
   const pts=rijen.map((r,i)=>({cx:pad.l+i*gW+gW/2,cy:pad.t+iH-((r.matTot/maxV)*iH),v:r.matTot}));
-  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pad.t+iH} ${pts.map(p=>`L${p.cx},${p.cy}`).join(' ')} L${pts[pts.length-1].cx},${pad.t+iH} Z`,fill:'rgba(180,142,247,0.12)'}));
-  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pts[0].cy} ${pts.slice(1).map(p=>`L${p.cx},${p.cy}`).join(' ')}`,fill:'none',stroke:'rgba(180,142,247,0.85)','stroke-width':'2','stroke-linejoin':'round'}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pad.t+iH} ${pts.map(p=>`L${p.cx},${p.cy}`).join(' ')} L${pts[pts.length-1].cx},${pad.t+iH} Z`,fill:'rgba(52,67,130,0.1)'}));
+  svg.appendChild(svgEl('path',{d:`M${pts[0].cx},${pts[0].cy} ${pts.slice(1).map(p=>`L${p.cx},${p.cy}`).join(' ')}`,fill:'none',stroke:'rgba(52,67,130,0.85)','stroke-width':'2','stroke-linejoin':'round'}));
   pts.forEach(p=>svg.appendChild(svgEl('circle',{cx:p.cx,cy:p.cy,r:'3.5',fill:'var(--accent)'})));
   rijen.forEach((r,i)=>{
     const cx=pad.l+i*gW+gW/2;
-    const t=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#8b87aa','font-size':'10','text-anchor':'middle','font-family':'system-ui'}); t.textContent=r.label; svg.appendChild(t);
+    const t=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#6b7280','font-size':'10','text-anchor':'middle','font-family':'system-ui'}); t.textContent=r.label; svg.appendChild(t);
   });
   if(inv>0){
     const ty=pad.t+iH-((inv/maxV)*iH);
-    svg.appendChild(svgEl('line',{x1:pad.l,y1:ty,x2:pad.l+iW,y2:ty,stroke:'rgba(247,124,124,0.55)','stroke-width':'1.5','stroke-dasharray':'5,4'}));
-    const lt=svgEl('text',{x:pad.l+iW-2,y:ty-5,fill:'rgba(247,124,124,0.7)','font-size':'9','text-anchor':'end','font-family':'system-ui'}); lt.textContent=`Doel ${fmtS(inv)}`; svg.appendChild(lt);
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:ty,x2:pad.l+iW,y2:ty,stroke:'rgba(217,54,54,0.55)','stroke-width':'1.5','stroke-dasharray':'5,4'}));
+    const lt=svgEl('text',{x:pad.l+iW-2,y:ty-5,fill:'rgba(217,54,54,0.7)','font-size':'9','text-anchor':'end','font-family':'system-ui'}); lt.textContent=`Doel ${fmtS(inv)}`; svg.appendChild(lt);
   }
   const last=pts[pts.length-1];
   const fl=svgEl('text',{x:last.cx,y:last.cy-8,fill:'var(--accent)','font-size':'9.5','text-anchor':'middle','font-family':'system-ui','font-weight':'600'}); fl.textContent=fmtS(last.v); svg.appendChild(fl);
@@ -825,22 +790,75 @@ function tekenMateriaalGrafiek(rijen,inv) {
 // ═══════════════════════════════════════════════
 // SUPABASE
 // ═══════════════════════════════════════════════
-function getSB() {
-  const url = localStorage.getItem('sb_url')||'';
-  const key = localStorage.getItem('sb_key')||'';
-  return {url:url.replace(/\/$/,''), key};
-}
-function sbHeaders(key){return {'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json','Prefer':'return=representation'};}
+const SB_URL = 'https://pirumlzwuiephntjgybz.supabase.co';
+const SB_KEY = 'sb_publishable_O0CgXM5QKx8Y7VPCryeOmw_krTdaLf4';
+const sbClient = window.supabase.createClient(SB_URL, SB_KEY);
 
 async function sbFetch(method, path, body=null) {
-  const {url,key}=getSB();
-  if(!url||!key) throw new Error('Supabase niet ingesteld. Ga naar Instellingen.');
-  const opts={method, headers:sbHeaders(key)};
-  if(body) opts.body=JSON.stringify(body);
-  const res=await fetch(url+'/rest/v1/'+path, opts);
-  if(!res.ok){const t=await res.text(); throw new Error(t);}
-  if(res.status===204) return null;
+  const { data: { session } } = await sbClient.auth.getSession();
+  if (!session) throw new Error('Niet ingelogd.');
+  const opts = { method, headers: {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + session.access_token,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  }};
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(SB_URL + '/rest/v1/' + path, opts);
+  if (!res.ok) { const t = await res.text(); throw new Error(t); }
+  if (res.status === 204) return null;
   return res.json();
+}
+
+// ═══════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════
+async function doeLogin() {
+  const email = $('login-email').value.trim();
+  const pw    = $('login-pw').value;
+  const msg   = $('login-msg');
+  const btn   = $('login-btn');
+  if (!email || !pw) { msg.style.color='var(--red)'; msg.textContent='Vul je e-mail en wachtwoord in.'; return; }
+  btn.textContent = 'Bezig...'; btn.disabled = true;
+  msg.textContent = '';
+  const { error } = await sbClient.auth.signInWithPassword({ email, password: pw });
+  btn.textContent = 'Inloggen'; btn.disabled = false;
+  if (error) { msg.style.color='var(--red)'; msg.textContent='Inloggen mislukt: controleer je e-mail en wachtwoord.'; return; }
+  toonApp();
+}
+
+async function doeUitloggen() {
+  await sbClient.auth.signOut();
+  $('main-app').style.display = 'none';
+  $('login-screen').classList.add('active');
+  $('login-pw').value = '';
+  $('login-msg').textContent = '';
+}
+
+async function wachtwoordVergeten() {
+  const email = $('login-email').value.trim();
+  const msg   = $('login-msg');
+  if (!email) { msg.style.color='var(--red)'; msg.textContent='Vul eerst je e-mailadres in hierboven.'; return; }
+  const { error } = await sbClient.auth.resetPasswordForEmail(email);
+  if (error) { msg.style.color='var(--red)'; msg.textContent='Fout: '+error.message; return; }
+  msg.style.color='var(--accent2)'; msg.textContent='✓ Resetlink verstuurd! Controleer je inbox.';
+}
+
+async function stuurResetLink() {
+  const { data: { session } } = await sbClient.auth.getSession();
+  if (!session) return;
+  const el = $('reset-status');
+  const { error } = await sbClient.auth.resetPasswordForEmail(session.user.email);
+  if (error) { el.style.color='var(--red)'; el.textContent='Fout: '+error.message; return; }
+  el.style.color='var(--accent2)'; el.textContent='✓ Resetlink verstuurd naar '+session.user.email;
+}
+
+function toonApp() {
+  $('login-screen').classList.remove('active');
+  $('main-app').style.display = 'block';
+  sbClient.auth.getSession().then(({ data: { session } }) => {
+    if (session) $('inst-email').textContent = session.user.email;
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -914,25 +932,25 @@ function tekenRecordGrafiek(data) {
   const n=data.length,gW=iW/n,bW=Math.min(gW*0.6,40);
   for(let i=0;i<=4;i++){
     const y=pad.t+(iH/4)*i;
-    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
-    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#8b87aa','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxV*(1-i/4)); svg.appendChild(t);
+    svg.appendChild(svgEl('line',{x1:pad.l,y1:y,x2:pad.l+iW,y2:y,stroke:'rgba(0,0,0,0.07)','stroke-width':'1'}));
+    const t=svgEl('text',{x:pad.l-6,y:y+4,fill:'#6b7280','font-size':'9','text-anchor':'end','font-family':'system-ui'}); t.textContent=fmtS(maxV*(1-i/4)); svg.appendChild(t);
   }
   data.forEach((r,i)=>{
     const cx=pad.l+i*gW+gW/2;
     const oH=Math.max(2,((r.omzet_bruto||0)/maxV)*iH);
     const isPos=(r.netto||0)>=0;
-    svg.appendChild(svgEl('rect',{x:cx-bW/2,y:pad.t+iH-oH,width:bW,height:oH,fill:isPos?'rgba(180,142,247,0.65)':'rgba(247,124,124,0.55)',rx:'4'}));
+    svg.appendChild(svgEl('rect',{x:cx-bW/2,y:pad.t+iH-oH,width:bW,height:oH,fill:isPos?'rgba(52,67,130,0.65)':'rgba(217,54,54,0.55)',rx:'4'}));
     const nettoH=Math.max(2,(Math.abs(r.netto||0)/maxV)*iH);
-    svg.appendChild(svgEl('rect',{x:cx-bW/2+2,y:pad.t+iH-nettoH,width:bW-4,height:nettoH,fill:isPos?'rgba(126,207,179,0.7)':'rgba(247,124,124,0.8)',rx:'3'}));
+    svg.appendChild(svgEl('rect',{x:cx-bW/2+2,y:pad.t+iH-nettoH,width:bW-4,height:nettoH,fill:isPos?'rgba(0,156,81,0.7)':'rgba(217,54,54,0.8)',rx:'3'}));
     // label
-    const lbl=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#8b87aa','font-size':'9','text-anchor':'middle','font-family':'system-ui',transform:`rotate(-35,${cx},${pad.t+iH+14})`});
+    const lbl=svgEl('text',{x:cx,y:pad.t+iH+14,fill:'#6b7280','font-size':'9','text-anchor':'middle','font-family':'system-ui',transform:`rotate(-35,${cx},${pad.t+iH+14})`});
     lbl.textContent=(r.datum||'').slice(5)||''; svg.appendChild(lbl);
   });
   // legend
-  [{c:'rgba(180,142,247,0.65)',l:'Omzet'},{c:'rgba(126,207,179,0.7)',l:'Netto (positief)'},{c:'rgba(247,124,124,0.8)',l:'Netto (verlies)'}].forEach((x,i)=>{
+  [{c:'rgba(52,67,130,0.65)',l:'Omzet'},{c:'rgba(0,156,81,0.7)',l:'Netto (positief)'},{c:'rgba(217,54,54,0.8)',l:'Netto (verlies)'}].forEach((x,i)=>{
     const lx=pad.l+i*145;
     svg.appendChild(svgEl('rect',{x:lx,y:pad.t-20,width:10,height:10,fill:x.c,rx:'2'}));
-    const t=svgEl('text',{x:lx+14,y:pad.t-11,fill:'#8b87aa','font-size':'9.5','font-family':'system-ui'}); t.textContent=x.l; svg.appendChild(t);
+    const t=svgEl('text',{x:lx+14,y:pad.t-11,fill:'#6b7280','font-size':'9.5','font-family':'system-ui'}); t.textContent=x.l; svg.appendChild(t);
   });
   wrap.appendChild(svg);
 }
@@ -962,10 +980,63 @@ function openSlaOpModal() {
   $('modal-slaop').classList.add('open');
 }
 
+let modalEventKosten = [];
+let modalOverigeKosten = [];
+
+function renderModalKostenLijst(wrapperId, lijst, type) {
+  const wrap = $(wrapperId); wrap.innerHTML = '';
+  lijst.forEach((r, i) => {
+    const div = document.createElement('div'); div.className = 'cost-line';
+    div.innerHTML = `<input type="text" value="${r.naam}" placeholder="Kostenpost" oninput="modalKostenUpdate('${type}',${i},'naam',this.value)">
+      <input type="number" value="${r.bedrag}" min="0" step="5" placeholder="€" oninput="modalKostenUpdate('${type}',${i},'bedrag',parseFloat(this.value)||0);calcModal()">
+      <button class="remove-btn" onclick="verwijderModalKost('${type}',${i})">×</button>`;
+    wrap.appendChild(div);
+  });
+}
+function modalKostenUpdate(type, i, veld, val) {
+  (type==='event' ? modalEventKosten : modalOverigeKosten)[i][veld] = val;
+}
+function voegModalKostToe(type) {
+  (type==='event' ? modalEventKosten : modalOverigeKosten).push({naam:'',bedrag:0});
+  renderModalKostenLijst(type==='event'?'n-kosten-regels':'n-overige-regels', type==='event'?modalEventKosten:modalOverigeKosten, type);
+  calcModal();
+}
+function verwijderModalKost(type, i) {
+  (type==='event' ? modalEventKosten : modalOverigeKosten).splice(i,1);
+  renderModalKostenLijst(type==='event'?'n-kosten-regels':'n-overige-regels', type==='event'?modalEventKosten:modalOverigeKosten, type);
+  calcModal();
+}
+function calcModal() {
+  const omzet = (+$('n-cash').value||0) + (+$('n-hipsy').value||0);
+  const vastK  = modalEventKosten.reduce((s,r)=>s+(+r.bedrag||0),0);
+  const overigK = modalOverigeKosten.reduce((s,r)=>s+(+r.bedrag||0),0);
+  const netto = omzet - vastK - overigK;
+  $('n-sum-omzet').textContent = fmt(omzet);
+  $('n-sum-kosten').textContent = fmt(vastK + overigK);
+  const el = $('n-sum-netto'); el.textContent = fmt(netto);
+  el.style.color = netto >= 0 ? 'var(--accent2)' : 'var(--red)';
+}
+
 function openNieuwModal() {
-  $('n-datum').value=today();
-  $('n-naam').value='';
-  $('n-notities').value='';
+  $('n-datum').value = today();
+  $('n-naam').value = '';
+  $('n-notities').value = '';
+  $('n-cash').value = 0;
+  $('n-hipsy').value = 0;
+  $('n-deel').value = 70;
+  $('n-soc').value = 10;
+  $('n-vrijw').value = 6;
+  modalEventKosten = [
+    {naam:'DJ',               bedrag:250},
+    {naam:'Ceremonieleider',  bedrag:60},
+    {naam:'Technicus',        bedrag:40},
+    {naam:'Organisator/Host', bedrag:500},
+    {naam:'Zaalverhuur',      bedrag:150},
+  ];
+  modalOverigeKosten = [];
+  renderModalKostenLijst('n-kosten-regels', modalEventKosten, 'event');
+  renderModalKostenLijst('n-overige-regels', modalOverigeKosten, 'overig');
+  calcModal();
   $('modal-nieuw').classList.add('open');
 }
 
@@ -994,52 +1065,30 @@ async function slaEventOp() {
 }
 
 async function slaHandmatigOp() {
-  const datum=$('n-datum').value;
-  if(!datum){alert('Vul een datum in.'); return;}
-  const omzet=+$('n-omzet').value||0, vast=+$('n-vast').value||0;
-  const fonds=+$('n-fonds').value||0, vw=+$('n-vrijww').value||0;
-  const netto=+$('n-netto').value||(omzet-vast-fonds-vw);
-  const payload={
-    datum, naam:$('n-naam').value||null,
-    deelnemers_betaald:+$('n-deel').value||null,
-    deelnemers_sociaal:+$('n-soc').value||null,
-    vrijwilligers:+$('n-vrijw').value||null,
-    omzet_bruto:omzet, kosten_vast:vast,
-    kosten_fonds:fonds, kosten_vrijw:vw,
-    netto, notities:$('n-notities').value||null
+  const datum = $('n-datum').value;
+  if (!datum) { alert('Vul een datum in.'); return; }
+  const cash   = +$('n-cash').value||0;
+  const hipsy  = +$('n-hipsy').value||0;
+  const omzet  = cash + hipsy;
+  const vastK  = Math.round(modalEventKosten.reduce((s,r)=>s+(+r.bedrag||0),0));
+  const overigK= Math.round(modalOverigeKosten.reduce((s,r)=>s+(+r.bedrag||0),0));
+  const netto  = omzet - vastK - overigK;
+  const payload = {
+    datum, naam: $('n-naam').value||null,
+    deelnemers_betaald: +$('n-deel').value||null,
+    deelnemers_sociaal: +$('n-soc').value||null,
+    vrijwilligers: +$('n-vrijw').value||null,
+    omzet_bruto: omzet, omzet_cash: cash, omzet_hipsy: hipsy,
+    kosten_vast: vastK, kosten_fonds: 0, kosten_vrijw: 0,
+    kosten_overig: overigK, netto,
+    notities: $('n-notities').value||null
   };
-  try{
+  try {
     await sbFetch('POST','dans_events',payload);
     sluitModal('modal-nieuw');
     toast('✅ Event opgeslagen!');
-    if($('tab-records').classList.contains('active')) laadRecords();
-  }catch(e){toast('Fout: '+e.message,'err');}
-}
-
-// ═══════════════════════════════════════════════
-// INSTELLINGEN
-// ═══════════════════════════════════════════════
-function laadInstellingen() {
-  $('sb-url').value=localStorage.getItem('sb_url')||'';
-  $('sb-key').value=localStorage.getItem('sb_key')||'';
-}
-
-function slaInstellingenOp() {
-  localStorage.setItem('sb_url',$('sb-url').value.trim());
-  localStorage.setItem('sb_key',$('sb-key').value.trim());
-}
-
-async function testVerbinding() {
-  const el=$('conn-status');
-  el.innerHTML='<div class="dot dot-idle"></div><span style="color:var(--muted)">Verbinding testen...</span>';
-  try{
-    await sbFetch('GET','dans_events?limit=1&select=id');
-    el.innerHTML='<div class="dot dot-ok"></div><span style="color:var(--accent2)">Verbinding geslaagd ✓</span>';
-    toast('Supabase verbonden!');
-  }catch(e){
-    el.innerHTML=`<div class="dot dot-err"></div><span style="color:var(--red)">Fout: ${e.message.slice(0,60)}</span>`;
-    toast('Verbinding mislukt','err');
-  }
+    if ($('tab-records').classList.contains('active')) laadRecords();
+  } catch(e) { toast('Fout: '+e.message,'err'); }
 }
 
 // ═══════════════════════════════════════════════
@@ -1047,6 +1096,17 @@ async function testVerbinding() {
 // ═══════════════════════════════════════════════
 renderKosten();
 calc();
+
+// Check if already logged in
+sbClient.auth.getSession().then(({ data: { session } }) => {
+  if (session) toonApp();
+});
+
+// Keep session in sync (e.g. after password reset redirect)
+sbClient.auth.onAuthStateChange((event, session) => {
+  if (session) toonApp();
+  else { $('main-app').style.display='none'; $('login-screen').classList.add('active'); }
+});
 </script>
 </body>
 </html>
