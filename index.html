@@ -1068,8 +1068,8 @@ function openBewerkModal(id) {
   $('n-deel').value = r.deelnemers_betaald ?? 0;
   $('n-soc').value = r.deelnemers_sociaal ?? 0;
   $('n-vrijw').value = r.vrijwilligers ?? 0;
-  modalEventKosten = r.kosten_vast ? [{naam:'Vaste kosten', bedrag: r.kosten_vast}] : [];
-  modalOverigeKosten = r.kosten_overig ? [{naam:'Overige kosten', bedrag: r.kosten_overig}] : [];
+  modalEventKosten = r.kosten_regels?.length ? r.kosten_regels : (r.kosten_vast ? [{naam:'Vaste kosten', bedrag: r.kosten_vast}] : []);
+  modalOverigeKosten = r.kosten_overig_regels?.length ? r.kosten_overig_regels : (r.kosten_overig ? [{naam:'Overige kosten', bedrag: r.kosten_overig}] : []);
   renderModalKostenLijst('n-kosten-regels', modalEventKosten, 'event');
   renderModalKostenLijst('n-overige-regels', modalOverigeKosten, 'overig');
   calcModal();
@@ -1117,6 +1117,8 @@ async function slaHandmatigOp() {
     omzet_bruto: omzet, omzet_cash: cash, omzet_hipsy: hipsy,
     kosten_vast: vastK, kosten_fonds: 0, kosten_vrijw: 0,
     kosten_overig: overigK, netto,
+    kosten_regels: modalEventKosten,
+    kosten_overig_regels: modalOverigeKosten,
     notities: $('n-notities').value||null
   };
   try {
