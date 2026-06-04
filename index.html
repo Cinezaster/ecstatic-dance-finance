@@ -467,7 +467,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <!-- Modal: nieuw event handmatig -->
 <div class="modal-bg" id="modal-nieuw">
   <div class="modal" style="max-width:600px">
-    <h2>+ Nieuw event registreren</h2>
+    <h2 id="modal-nieuw-titel">+ Nieuw event registreren</h2>
 
     <div class="section-heading" style="margin-top:0;margin-bottom:10px;font-size:.8rem;color:var(--muted)">BASISGEGEVENS</div>
     <div class="grid-2" style="margin-bottom:12px">
@@ -884,6 +884,7 @@ async function laadRecords() {
 }
 
 function toonRecords(data) {
+  allRecords = data;
   // KPIs
   const totO=data.reduce((s,r)=>s+(r.omzet_bruto||0),0);
   const totN=data.reduce((s,r)=>s+(r.netto||0),0);
@@ -917,7 +918,10 @@ function toonRecords(data) {
       <td class="r" style="color:var(--accent3)">${r.kosten_vast!=null?fmtS((r.kosten_vast||0)+(r.kosten_fonds||0)+(r.kosten_vrijw||0)):'—'}</td>
       <td class="r"><span class="badge ${(r.netto||0)>=0?'badge-green':'badge-red'}">${r.netto!=null?fmtS(r.netto):'—'}</span></td>
       <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.8rem">${r.notities||''}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="verwijderRecord(${r.id})">✕</button></td>
+      <td style="white-space:nowrap;display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="openBewerkModal(${r.id})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="verwijderRecord(${r.id})">✕</button>
+      </td>
     </tr>`).join('')}</tbody>
   </table></div>`;
 }
@@ -982,6 +986,8 @@ function openSlaOpModal() {
 
 let modalEventKosten = [];
 let modalOverigeKosten = [];
+let editingId = null;
+let allRecords = [];
 
 function renderModalKostenLijst(wrapperId, lijst, type) {
   const wrap = $(wrapperId); wrap.innerHTML = '';
@@ -1018,6 +1024,8 @@ function calcModal() {
 }
 
 function openNieuwModal() {
+  editingId = null;
+  $('modal-nieuw-titel').textContent = '+ Nieuw event registreren';
   $('n-datum').value = today();
   $('n-naam').value = '';
   $('n-notities').value = '';
@@ -1034,6 +1042,27 @@ function openNieuwModal() {
     {naam:'Zaalverhuur',      bedrag:150},
   ];
   modalOverigeKosten = [];
+  renderModalKostenLijst('n-kosten-regels', modalEventKosten, 'event');
+  renderModalKostenLijst('n-overige-regels', modalOverigeKosten, 'overig');
+  calcModal();
+  $('modal-nieuw').classList.add('open');
+}
+
+function openBewerkModal(id) {
+  const r = allRecords.find(x => x.id === id);
+  if (!r) return;
+  editingId = r.id;
+  $('modal-nieuw-titel').textContent = '✏️ Event bewerken';
+  $('n-datum').value = r.datum || today();
+  $('n-naam').value = r.naam || '';
+  $('n-notities').value = r.notities || '';
+  $('n-cash').value = r.omzet_cash ?? r.omzet_bruto ?? 0;
+  $('n-hipsy').value = r.omzet_hipsy ?? 0;
+  $('n-deel').value = r.deelnemers_betaald ?? 0;
+  $('n-soc').value = r.deelnemers_sociaal ?? 0;
+  $('n-vrijw').value = r.vrijwilligers ?? 0;
+  modalEventKosten = r.kosten_vast ? [{naam:'Vaste kosten', bedrag: r.kosten_vast}] : [];
+  modalOverigeKosten = r.kosten_overig ? [{naam:'Overige kosten', bedrag: r.kosten_overig}] : [];
   renderModalKostenLijst('n-kosten-regels', modalEventKosten, 'event');
   renderModalKostenLijst('n-overige-regels', modalOverigeKosten, 'overig');
   calcModal();
@@ -1084,9 +1113,15 @@ async function slaHandmatigOp() {
     notities: $('n-notities').value||null
   };
   try {
-    await sbFetch('POST','dans_events',payload);
+    if (editingId) {
+      await sbFetch('PATCH',`dans_events?id=eq.${editingId}`,payload);
+      toast('✅ Event bijgewerkt!');
+    } else {
+      await sbFetch('POST','dans_events',payload);
+      toast('✅ Event opgeslagen!');
+    }
+    editingId = null;
     sluitModal('modal-nieuw');
-    toast('✅ Event opgeslagen!');
     if ($('tab-records').classList.contains('active')) laadRecords();
   } catch(e) { toast('Fout: '+e.message,'err'); }
 }
