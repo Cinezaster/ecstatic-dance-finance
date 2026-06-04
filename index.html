@@ -691,7 +691,7 @@ function calcProj() {
     const vastK=(d0.vast+d0.vrijwW)*evts;
     const een=m===invMo?inv:0;
     const netto=omzet-vastK-matF-een;
-    matTot+=matF; cum+=netto;
+    matTot+=matF; cum+=omzet-vastK-een;
     rijen.push({m,mIdx,label:MAANDEN_KORT[mIdx],labelVol:MAANDEN[mIdx],evts,gd,omzet,vastK,matF,netto,cum,matTot,een});
   }
   const tO=rijen.reduce((s,r)=>s+r.omzet,0);
