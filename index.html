@@ -304,8 +304,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div>
         <label>Frequentie</label>
         <div class="toggle-group">
-          <button class="toggle-btn active" id="freq-twee" onclick="setFreq('tweewekelijks',this)">Tweewekelijks</button>
-          <button class="toggle-btn" id="freq-week" onclick="setFreq('wekelijks',this)">Wekelijks</button>
+          <button class="toggle-btn" id="freq-twee" onclick="setFreq('tweewekelijks',this)">Tweewekelijks</button>
+          <button class="toggle-btn active" id="freq-week" onclick="setFreq('wekelijks',this)">Wekelijks</button>
         </div>
       </div>
       <div>
@@ -314,8 +314,8 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       </div>
       <div>
         <label>Groei deelnemers per maand (%)</label>
-        <input type="range" id="proj-groei" min="0" max="10" value="2" step="0.5" oninput="syncR(this,'pgNum','%');calcProj()">
-        <div class="range-row"><span>0%</span><span id="pgNum" style="color:var(--accent);font-weight:700">2%</span><span>10%</span></div>
+        <input type="range" id="proj-groei" min="0" max="10" value="0" step="0.5" oninput="syncR(this,'pgNum','%');calcProj()">
+        <div class="range-row"><span>0%</span><span id="pgNum" style="color:var(--accent);font-weight:700">0%</span><span>10%</span></div>
       </div>
     </div>
     <hr>
@@ -325,7 +325,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
         <select id="proj-startmaand" onchange="calcProj()">
           <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maart</option>
           <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
-          <option value="6">Juli</option><option value="7">Augustus</option><option value="8">September</option>
+          <option value="6">Juli</option><option value="7">Augustus</option><option value="8" selected>September</option>
           <option value="9">Oktober</option><option value="10">November</option><option value="11">December</option>
         </select>
       </div>
@@ -335,14 +335,14 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       </div>
       <div>
         <label>Investering in maand #</label>
-        <input type="number" id="proj-invest-mo" value="1" oninput="calcProj()" min="1" max="12">
+        <input type="number" id="proj-invest-mo" value="6" oninput="calcProj()" min="1" max="12">
       </div>
     </div>
     <hr>
     <div class="grid-2">
       <div>
         <label>Startkapitaal (€)</label>
-        <input type="number" id="proj-kas" value="0" oninput="calcProj()" min="0" step="500">
+        <input type="number" id="proj-kas" value="1000" oninput="calcProj()" min="0" step="500">
       </div>
     </div>
     <hr>
@@ -522,7 +522,7 @@ let kostenRegels = [
   {naam:'Technicus',        bedrag:40},
   {naam:'Organisatiekosten',bedrag:500},
 ];
-let freq = 'tweewekelijks';
+let freq = 'wekelijks';
 const MAANDEN      = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
 const MAANDEN_KORT = ['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
 
